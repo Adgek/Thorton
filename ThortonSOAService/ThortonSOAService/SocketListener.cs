@@ -12,7 +12,7 @@ namespace ThortonSOAService
     class SocketListener
     {
         private const int PORT = 11000;
-        private const string IP_ADDRESS = "192.168.0.37";
+        private const string IP_ADDRESS = "192.168.2.24";
 
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);

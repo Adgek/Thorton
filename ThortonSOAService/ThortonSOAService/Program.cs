@@ -10,6 +10,19 @@ namespace ThortonSOAService
     {
         static void Main(string[] args)
         {
+            string command = "";
+            //Service Start
+            
+            //Register team
+            command = "";
+            SocketSender.StartClient(command);
+
+            //Publish service
+            command = "";
+            SocketSender.StartClient(command);
+
+            //listen for requests
+            
             SocketListener.StartListening();
             
             
