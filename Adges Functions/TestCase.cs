@@ -9,9 +9,9 @@ namespace test
 
 		public static void Main(string[] args)
 		{
-			HL7Handler myHandler = new HL7Handler();
+			HL7 myHL7 = HL7Builder.BuildRegisterTeamMessage();
 			
-			Console.WriteLine("end of program");
+			Console.WriteLine(myHL7.segments);
 
 			return;		
 		}
