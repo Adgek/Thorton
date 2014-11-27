@@ -12,9 +12,7 @@ namespace ThortonSOAService
         private static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-<<<<<<< HEAD
             logger.Log(LogLevel.Info, "The program has started!");
-=======
             string command = "";
             //Service Start
             
@@ -25,10 +23,6 @@ namespace ThortonSOAService
             //Publish service
             command = "";
             SocketSender.StartClient(command);
-
-            //listen for requests
-            
->>>>>>> origin/master
             SocketListener.StartListening();
         }
     }
