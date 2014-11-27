@@ -23,8 +23,7 @@ namespace test
 			//create INF segment
 			teamName = "FunnyGlasses";
 			BuildINFSegment(builtHL7,teamName);
-			//create full string
-				//
+			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
 		}
 
@@ -67,21 +66,31 @@ namespace test
 		//Need method for creating DRC segment
 		public static void BuildDRCSegment(HL7 builtHL7, string cmd, string teamName="", string teamID="")
 		{
-			string fullSegment = "";
 			string segmentTitle = "DRC";
 			
-			fullSegment = "this is a segment";
-			HL7Segment newSegment = new HL7Segment(fullSegment);
+			HL7Segment newSegment = new HL7Segment();
+			newSegment.fields.Add(segmentTitle);
+			newSegment.fields.Add(cmd);
+			newSegment.fields.Add(teamName);
+			newSegment.fields.Add(teamID);
+			newSegment.ConvertFieldsToSegmentString();
 			builtHL7.segments.Add(newSegment);
-
-			//builtHL7.segments.Add(new HL7Segment(fullSegment));
-			//might just return void and edit the HL7 or return string	
+	
 		}
+
 		//Need method for creating INF segment
 		public static void BuildINFSegment(HL7 builtHL7, string teamName, string teamID="", string serviceTagName="")
 		{
 			string segmentTitle = "INF";
-			//might just return void and edit the HL7 or return string	
+
+			HL7Segment newSegment = new HL7Segment();
+			newSegment.fields.Add(segmentTitle);
+			newSegment.fields.Add(teamName);
+			newSegment.fields.Add(teamID);
+			newSegment.fields.Add(serviceTagName);
+			newSegment.ConvertFieldsToSegmentString();
+			builtHL7.segments.Add(newSegment);
+				
 		}
 		//Need method for creating SRV segment
 		public static void BuildSRVSegment(HL7 builtHL7)
@@ -104,6 +113,29 @@ namespace test
 			//might just return void and edit the HL7 or return string	
 		}
 
+		public static void FinalizeHL7Protocol(HL7 builtHL7)
+		{
+			char msgBeg = (char)11;
+			char segEnd = (char)13;
+			char msgEnd = (char)28;
+
+			string messagebuilder = msgBeg.ToString();
+			//string messagebuilder = "";
+
+			//byte[] messagebuilder = Encoding.ASCII.GetBytes(message);
+
+			foreach(HL7Segment seg in builtHL7.segments)
+			{
+				//byte[] msg = Encoding.ASCII.GetBytes(message);
+				//messagebuilder+= seg.segment + segEnd.ToString();
+				messagebuilder+= seg.segment;
+
+			}
+
+			//messagebuilder += msgEnd.ToString() + segEnd.ToString() + "testy";
+
+			builtHL7.fullHL7Message = messagebuilder;
+		}
 
 
 	}

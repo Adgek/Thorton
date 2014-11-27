@@ -11,7 +11,9 @@ namespace test
 		{
 			HL7 myHL7 = HL7Builder.BuildRegisterTeamMessage();
 			
-			Console.WriteLine(myHL7.segments);
+			Console.WriteLine("FINALPRINT");
+			Console.WriteLine(myHL7.fullHL7Message);
+			
 
 			return;		
 		}

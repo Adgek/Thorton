@@ -16,15 +16,25 @@ namespace test
 		//Constructor is blank for the HL7Segment builder
 		public HL7Segment()
 		{
-			
+			fields = new List<string>();
 		}
 		
 		//Constructor takes an HL7Segment string for responses
 		public HL7Segment(string fullSegment)
 		{
 			segment = fullSegment;
-			fields = new List<string>();
 		}
+
+		public void ConvertFieldsToSegmentString()
+		{
+			foreach (string field in fields)
+			{
+				segment+=field + "|";
+			}
+		}
+
+		//Maybe have a validate segment method that will check fields.count agianst 
+		//passed in value to determine number of fields
 
 
 	}
