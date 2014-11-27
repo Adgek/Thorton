@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
-namespace test
+namespace HL7Records
 {
 	class HL7Handler
 	{
