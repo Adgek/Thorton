@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,11 @@ namespace ThortonSOAService
 {
     class Program
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
+            logger.Log(LogLevel.Info, "The program has started!");
             SocketListener.StartListening();
-            
-            
         }
     }
 }
