@@ -92,48 +92,47 @@ namespace test
 			builtHL7.segments.Add(newSegment);
 				
 		}
+		
 		//Need method for creating SRV segment
 		public static void BuildSRVSegment(HL7 builtHL7)
 		{
 			//might just return void and edit the HL7 or return string	
 		}
+		
 		//Need method for creating ARG segment
 		public static void BuildARGSegment(HL7 builtHL7)
 		{
 			//might just return void and edit the HL7 or return string	
 		}
+		
 		//Need method for creating RSP segment
 		public static void BuildRSPSegment(HL7 builtHL7)
 		{
 			//might just return void and edit the HL7 or return string	
 		}
+		
 		//Need method for creating MCH segment
 		public static void BuildMCHSegment(HL7 builtHL7)
 		{
 			//might just return void and edit the HL7 or return string	
 		}
 
+		//Add on HL7 specific chars
 		public static void FinalizeHL7Protocol(HL7 builtHL7)
 		{
 			char msgBeg = (char)11;
 			char segEnd = (char)13;
-			char msgEnd = (char)28;
+			char msgEnd = (char)28;//Put these as CONSTS in HL7 class
 
 			string messagebuilder = msgBeg.ToString();
-			//string messagebuilder = "";
-
-			//byte[] messagebuilder = Encoding.ASCII.GetBytes(message);
 
 			foreach(HL7Segment seg in builtHL7.segments)
 			{
-				//byte[] msg = Encoding.ASCII.GetBytes(message);
-				//messagebuilder+= seg.segment + segEnd.ToString();
-				messagebuilder+= seg.segment;
+				messagebuilder+= seg.segment + segEnd.ToString();
 
 			}
 
-			//messagebuilder += msgEnd.ToString() + segEnd.ToString() + "testy";
-
+			messagebuilder += msgEnd.ToString() + segEnd.ToString();
 			builtHL7.fullHL7Message = messagebuilder;
 		}
 
