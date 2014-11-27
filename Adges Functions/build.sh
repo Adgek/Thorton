@@ -1,0 +1,1 @@
+gmcs TestCase.cs HL7Parser.cs HL7Handler.cs HL7.cs && mono TestCase.exe
