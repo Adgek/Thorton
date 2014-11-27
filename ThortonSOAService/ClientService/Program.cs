@@ -24,7 +24,9 @@ namespace ClientService
     class Program
     {
         // The port number for the remote device.
-        private const int port = 11000;
+        private const int PORT = 11000;
+        private const string IP_ADDRESS = "192.168.2.24";
+
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -45,9 +47,8 @@ namespace ClientService
                 // Establish the remote endpoint for the socket.
                 // The name of the 
                 // remote device is "host.contoso.com".
-                IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+                IPAddress ipAddress = IPAddress.Parse(IP_ADDRESS);
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);          
 
                 // Create a TCP/IP socket.
                 Socket client = new Socket(AddressFamily.InterNetwork,
