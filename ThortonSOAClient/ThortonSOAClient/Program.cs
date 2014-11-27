@@ -16,7 +16,7 @@ namespace ThortonSOAClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new pageOne());
+            Application.Run(new serviceSelectionForm());
         }
     }
 }

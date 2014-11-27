@@ -1,6 +1,6 @@
 ﻿namespace ThortonSOAClient
 {
-    partial class serviceCaller
+    partial class serviceCallerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,20 +30,20 @@
         {
             this.components = new System.ComponentModel.Container();
             this.serviceInfoGB = new System.Windows.Forms.GroupBox();
-            this.teamNameLbl = new System.Windows.Forms.Label();
-            this.serviceNameLbl = new System.Windows.Forms.Label();
-            this.serviceDescriptionLbl = new System.Windows.Forms.Label();
-            this.serviceDescTB = new System.Windows.Forms.TextBox();
-            this.teamNametb = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.teamNametb = new System.Windows.Forms.TextBox();
+            this.serviceDescTB = new System.Windows.Forms.TextBox();
+            this.serviceDescriptionLbl = new System.Windows.Forms.Label();
+            this.serviceNameLbl = new System.Windows.Forms.Label();
+            this.teamNameLbl = new System.Windows.Forms.Label();
             this.arg1TB = new System.Windows.Forms.TextBox();
             this.arg1Lbl = new System.Windows.Forms.Label();
             this.serviceCallerGB = new System.Windows.Forms.GroupBox();
+            this.executeBtn = new System.Windows.Forms.Button();
             this.arg2TB = new System.Windows.Forms.TextBox();
             this.arg2Lbl = new System.Windows.Forms.Label();
             this.arg1Err = new System.Windows.Forms.ErrorProvider(this.components);
             this.arg2Err = new System.Windows.Forms.ErrorProvider(this.components);
-            this.executeBtn = new System.Windows.Forms.Button();
             this.responseGB = new System.Windows.Forms.GroupBox();
             this.responseTB = new System.Windows.Forms.TextBox();
             this.serviceInfoGB.SuspendLayout();
@@ -69,35 +69,23 @@
             this.serviceInfoGB.TabStop = false;
             this.serviceInfoGB.Text = "Service Information";
             // 
-            // teamNameLbl
+            // textBox1
             // 
-            this.teamNameLbl.AutoSize = true;
-            this.teamNameLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.teamNameLbl.Location = new System.Drawing.Point(56, 40);
-            this.teamNameLbl.Name = "teamNameLbl";
-            this.teamNameLbl.Size = new System.Drawing.Size(103, 20);
-            this.teamNameLbl.TabIndex = 0;
-            this.teamNameLbl.Text = "Team Name :";
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(165, 74);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(176, 26);
+            this.textBox1.TabIndex = 5;
             // 
-            // serviceNameLbl
+            // teamNametb
             // 
-            this.serviceNameLbl.AutoSize = true;
-            this.serviceNameLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serviceNameLbl.Location = new System.Drawing.Point(44, 74);
-            this.serviceNameLbl.Name = "serviceNameLbl";
-            this.serviceNameLbl.Size = new System.Drawing.Size(115, 20);
-            this.serviceNameLbl.TabIndex = 1;
-            this.serviceNameLbl.Text = "Service Name :";
-            // 
-            // serviceDescriptionLbl
-            // 
-            this.serviceDescriptionLbl.AutoSize = true;
-            this.serviceDescriptionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serviceDescriptionLbl.Location = new System.Drawing.Point(6, 104);
-            this.serviceDescriptionLbl.Name = "serviceDescriptionLbl";
-            this.serviceDescriptionLbl.Size = new System.Drawing.Size(153, 20);
-            this.serviceDescriptionLbl.TabIndex = 2;
-            this.serviceDescriptionLbl.Text = "Service Description :";
+            this.teamNametb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.teamNametb.Location = new System.Drawing.Point(165, 40);
+            this.teamNametb.Name = "teamNametb";
+            this.teamNametb.ReadOnly = true;
+            this.teamNametb.Size = new System.Drawing.Size(176, 26);
+            this.teamNametb.TabIndex = 4;
             // 
             // serviceDescTB
             // 
@@ -110,24 +98,35 @@
             this.serviceDescTB.Size = new System.Drawing.Size(406, 103);
             this.serviceDescTB.TabIndex = 3;
             // 
-            // teamNametb
+            // serviceDescriptionLbl
             // 
-            this.teamNametb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.teamNametb.Location = new System.Drawing.Point(165, 40);
-            this.teamNametb.Name = "teamNametb";
-            this.teamNametb.ReadOnly = true;
-            this.teamNametb.Size = new System.Drawing.Size(176, 26);
-            this.teamNametb.TabIndex = 4;
-            this.teamNametb.TextChanged += new System.EventHandler(this.teamNametb_TextChanged);
+            this.serviceDescriptionLbl.AutoSize = true;
+            this.serviceDescriptionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serviceDescriptionLbl.Location = new System.Drawing.Point(6, 104);
+            this.serviceDescriptionLbl.Name = "serviceDescriptionLbl";
+            this.serviceDescriptionLbl.Size = new System.Drawing.Size(153, 20);
+            this.serviceDescriptionLbl.TabIndex = 2;
+            this.serviceDescriptionLbl.Text = "Service Description :";
             // 
-            // textBox1
+            // serviceNameLbl
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(165, 74);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(176, 26);
-            this.textBox1.TabIndex = 5;
+            this.serviceNameLbl.AutoSize = true;
+            this.serviceNameLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serviceNameLbl.Location = new System.Drawing.Point(44, 74);
+            this.serviceNameLbl.Name = "serviceNameLbl";
+            this.serviceNameLbl.Size = new System.Drawing.Size(115, 20);
+            this.serviceNameLbl.TabIndex = 1;
+            this.serviceNameLbl.Text = "Service Name :";
+            // 
+            // teamNameLbl
+            // 
+            this.teamNameLbl.AutoSize = true;
+            this.teamNameLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.teamNameLbl.Location = new System.Drawing.Point(56, 40);
+            this.teamNameLbl.Name = "teamNameLbl";
+            this.teamNameLbl.Size = new System.Drawing.Size(103, 20);
+            this.teamNameLbl.TabIndex = 0;
+            this.teamNameLbl.Text = "Team Name :";
             // 
             // arg1TB
             // 
@@ -136,7 +135,6 @@
             this.arg1TB.Name = "arg1TB";
             this.arg1TB.Size = new System.Drawing.Size(371, 26);
             this.arg1TB.TabIndex = 1;
-            this.arg1TB.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // arg1Lbl
             // 
@@ -147,7 +145,6 @@
             this.arg1Lbl.Size = new System.Drawing.Size(96, 20);
             this.arg1Lbl.TabIndex = 2;
             this.arg1Lbl.Text = "Argument 1:";
-            this.arg1Lbl.Click += new System.EventHandler(this.param1Lbl_Click);
             // 
             // serviceCallerGB
             // 
@@ -163,6 +160,15 @@
             this.serviceCallerGB.TabIndex = 3;
             this.serviceCallerGB.TabStop = false;
             this.serviceCallerGB.Text = "Service Calling";
+            // 
+            // executeBtn
+            // 
+            this.executeBtn.Location = new System.Drawing.Point(147, 208);
+            this.executeBtn.Name = "executeBtn";
+            this.executeBtn.Size = new System.Drawing.Size(131, 46);
+            this.executeBtn.TabIndex = 5;
+            this.executeBtn.Text = "Execute";
+            this.executeBtn.UseVisualStyleBackColor = true;
             // 
             // arg2TB
             // 
@@ -190,15 +196,6 @@
             // 
             this.arg2Err.ContainerControl = this;
             // 
-            // executeBtn
-            // 
-            this.executeBtn.Location = new System.Drawing.Point(147, 208);
-            this.executeBtn.Name = "executeBtn";
-            this.executeBtn.Size = new System.Drawing.Size(131, 46);
-            this.executeBtn.TabIndex = 5;
-            this.executeBtn.Text = "Execute";
-            this.executeBtn.UseVisualStyleBackColor = true;
-            // 
             // responseGB
             // 
             this.responseGB.Controls.Add(this.responseTB);
@@ -216,11 +213,12 @@
             this.responseTB.Location = new System.Drawing.Point(6, 29);
             this.responseTB.Multiline = true;
             this.responseTB.Name = "responseTB";
+            this.responseTB.ReadOnly = true;
             this.responseTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.responseTB.Size = new System.Drawing.Size(385, 468);
             this.responseTB.TabIndex = 0;
             // 
-            // serviceCaller
+            // serviceCallerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -229,7 +227,8 @@
             this.Controls.Add(this.serviceCallerGB);
             this.Controls.Add(this.serviceInfoGB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "serviceCaller";
+            this.MaximizeBox = false;
+            this.Name = "serviceCallerForm";
             this.ShowIcon = false;
             this.Text = "Service Caller";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.serviceCaller_FormClosing);

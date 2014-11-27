@@ -1,6 +1,6 @@
 ﻿namespace ThortonSOAClient
 {
-    partial class pageOne
+    partial class serviceSelectionForm
     {
         /// <summary>
         /// Required designer variable.

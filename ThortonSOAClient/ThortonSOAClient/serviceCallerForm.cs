@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace ThortonSOAClient
 {
-    public partial class serviceCaller : Form
+    public partial class serviceCallerForm : Form
     {
-        public serviceCaller()
+        public serviceCallerForm()
         {
             InitializeComponent();
         }
@@ -20,21 +20,6 @@ namespace ThortonSOAClient
         private void serviceCaller_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
-        }
-
-        private void param1Lbl_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void teamNametb_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

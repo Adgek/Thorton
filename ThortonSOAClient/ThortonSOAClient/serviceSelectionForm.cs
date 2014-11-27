@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,15 +11,17 @@ using System.Windows.Forms;
 
 namespace ThortonSOAClient
 {
-    public partial class pageOne : Form
+    public partial class serviceSelectionForm : Form
     {
-        public pageOne()
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+        public serviceSelectionForm()
         {
             InitializeComponent();
         }
 
         private void pageOne_Load(object sender, EventArgs e)
         {
+            logger.Log(LogLevel.Info, "The program has started!");
             serviceSelectCB.Items.Add("Service 1");
         }
 
@@ -31,7 +34,7 @@ namespace ThortonSOAClient
             else
             { 
                 this.Hide();
-                serviceCaller sc = new serviceCaller();
+                serviceCallerForm sc = new serviceCallerForm();
                 sc.Show();
             }
         }
