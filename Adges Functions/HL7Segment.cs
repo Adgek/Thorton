@@ -19,7 +19,7 @@ namespace test
 		}
 		
 		//Constructor takes an HL7Segment string for responses
-		public HL7(string segment)
+		public HL7Segment(string segment)
 		{
 			
 		}
