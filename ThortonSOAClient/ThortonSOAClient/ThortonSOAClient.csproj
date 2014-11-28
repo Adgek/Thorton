@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HL7Lib">
+      <HintPath>..\..\HL7Lib\HL7Lib\bin\Debug\HL7Lib.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -39,6 +42,7 @@
       <HintPath>..\..\Socketlib\Socket\bin\Debug\Socket.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,12 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HL7\HL7.cs" />
-    <Compile Include="HL7\HL7Builder.cs" />
-    <Compile Include="HL7\HL7Handler.cs" />
-    <Compile Include="HL7\HL7Parser.cs" />
-    <Compile Include="HL7\HL7Segment.cs" />
-    <Compile Include="HL7\Service.cs" />
     <Compile Include="serviceSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace HL7Records
+namespace HL7Lib.HL7
 {
-	class HL7Segment
+    public class HL7Segment
 	{
 		//This is the HL7Segment object
 
@@ -21,6 +21,8 @@ namespace HL7Records
 		public HL7Segment(string fullSegment)
 		{
 			segment = fullSegment;
+
+			fields = HL7Parser.GetFieldsFromSegment(fullSegment);
 		}
 
 		public void ConvertFieldsToSegmentString()

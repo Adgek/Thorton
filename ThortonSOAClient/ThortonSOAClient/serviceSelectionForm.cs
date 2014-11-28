@@ -9,8 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SocketClass;
-using HL7Records;
 using System.Configuration;
+using HL7Lib.HL7;
+using HL7Lib.ServiceData;
 
 
 namespace ThortonSOAClient
@@ -21,9 +22,10 @@ namespace ThortonSOAClient
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private static HL7Handler handler = new HL7Handler();
-        private static Service service = new Service();
+        private static Service service;
 
-        private static string[] methods = {"GIORP-TOTAL"};
+        private static string[] methods = ConfigurationManager.AppSettings["tagNames"].Split('|');
+        private static string[] serviceNames = ConfigurationManager.AppSettings["serviceNames"].Split('|');
 
         public serviceSelectionForm()
         {
@@ -32,8 +34,12 @@ namespace ThortonSOAClient
 
         private void pageOne_Load(object sender, EventArgs e)
         {
+            foreach (string name in serviceNames)
+            {
+                serviceSelectCB.Items.Add(name);
+            }
             logger.Log(LogLevel.Info, "The program has started!");
-            serviceSelectCB.Items.Add("Service 1");
+            
         }
 
         private void executeBtn_Click(object sender, EventArgs e)
@@ -44,22 +50,21 @@ namespace ThortonSOAClient
             }
             else
             {
-                this.Hide();
-                serviceCallerForm sc = new serviceCallerForm();
-                sc.Show();
-                //string method = methods[serviceSelectCB.SelectedIndex];
-                //string command = "";
-                //string returnMsg = SocketSender.StartClient(command);
-                //if(returnMsg.Contains("SOA NOT OK"))
-                //{
-
-                //}
-                //else
-                //{ 
-                    
-                //}
-            }
-
+                service = new Service();
+                string method = methods[serviceSelectCB.SelectedIndex];
+                string command = "";
+                string returnMsg = SocketSender.StartClient(command);
+                if (returnMsg.Contains("SOA NOT OK"))
+                {
+                
+                }
+                else
+                {
+                    this.Hide();
+                    serviceCallerForm sc = new serviceCallerForm();
+                    sc.Show();
+                }
+            }            
         }
     }
 }
