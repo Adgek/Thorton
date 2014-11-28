@@ -50,8 +50,6 @@ namespace ThortonSOAService
 
                     result = Encoding.ASCII.GetString(bytes);
 
-
-
                 }
                 catch (ArgumentNullException ane)
                 {

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-
-
 namespace HL7Records
 {
 	class HL7Segment
