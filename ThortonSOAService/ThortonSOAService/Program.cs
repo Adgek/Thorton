@@ -10,6 +10,7 @@ using SocketClass;
 using System.Net;
 using HL7Lib.HL7;
 using HL7Lib.ServiceData;
+using System.Configuration;
 
 namespace ThortonSOAService
 {
@@ -21,8 +22,9 @@ namespace ThortonSOAService
         {
             HL7Handler handler = new HL7Handler();
 
-            const string SERVICE_NAME = "PurchaseTotaller";
-            const string TEAM_NAME = "FunnyGlasses";
+            string SERVICE_NAME = ConfigurationManager.AppSettings["ServiceName"];
+            string TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
+            string TAG_NAME = ConfigurationManager.AppSettings["TagName"];
             const int PORT = 11000;
 
             string TEAM_ID = "";
@@ -32,9 +34,9 @@ namespace ThortonSOAService
 
             //Service Start
             logger.Log(LogLevel.Info, "==================================================================\n");
-            logger.Log(LogLevel.Info, "Team\t: FunnyGlasses (Matt, Adrian, Kyle)\n");
-            logger.Log(LogLevel.Info, "Tag-Name\t: GIORP-TOTAL\n");
-            logger.Log(LogLevel.Info, "Service\t: PurchaseTotaller\n");
+            logger.Log(LogLevel.Info, "Team\t: " + TEAM_NAME + "(Matt, Adrian, Kyle)\n");
+            logger.Log(LogLevel.Info, "Tag-Name\t: " + TAG_NAME + "\n");
+            logger.Log(LogLevel.Info, "Service\t: " + SERVICE_NAME + "\n");
             logger.Log(LogLevel.Info, "==================================================================\n");
             logger.Log(LogLevel.Info, "---\n");                   
          

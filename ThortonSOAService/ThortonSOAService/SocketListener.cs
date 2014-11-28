@@ -29,7 +29,7 @@ namespace ThortonSOAService
 
         public SocketListener()
         {
-            TEAM_NAME = "FunnyGlasses";
+            TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
 
             //QUERY FOR TEAM ID
             HL7Handler hl7h = new HL7Handler();
@@ -168,11 +168,6 @@ namespace ThortonSOAService
                 {
                     //log error
                 }
-                
-
-                
-
-
             }
         }
 
