@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SocketClass;
+
 
 namespace ThortonSOAClient
 {
@@ -33,6 +35,7 @@ namespace ThortonSOAClient
             }
             else
             {
+                SocketSender.StartClient("some derpy message");
                 this.Hide();
                 serviceCallerForm sc = new serviceCallerForm();
                 sc.Show();

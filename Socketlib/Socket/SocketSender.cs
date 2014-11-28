@@ -9,7 +9,7 @@ using System.Configuration;
 
 namespace SocketClass
 {
-    static class SocketSender
+    static public class SocketSender
     {
         private static int PORT = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
         private static string IP_ADDRESS = ConfigurationManager.AppSettings["ipaddress"];
