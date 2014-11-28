@@ -1,1 +1,1 @@
-gmcs TestCase.cs HL7Parser.cs HL7Handler.cs HL7.cs HL7Segment.cs HL7Builder.cs && mono TestCase.exe
+gmcs TestCase.cs HL7Parser.cs HL7Handler.cs HL7.cs HL7Segment.cs HL7Builder.cs Service.cs && mono TestCase.exe

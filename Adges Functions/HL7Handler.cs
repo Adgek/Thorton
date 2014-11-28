@@ -12,6 +12,7 @@ namespace HL7Records
 		}
 
 		//Needs a function for sending a Register Team message
+		//done
 		public string RegisterTeamMessage()
 		{
 			HL7 myRecord = HL7Builder.BuildRegisterTeamMessage();
@@ -42,9 +43,10 @@ namespace HL7Records
 		//Needs a function for handling the reponse of a Query Team message
 
 		//Needs a function for sending a Publish Service message
-		public string PublishServiceMessage()
+		//done
+		public string PublishServiceMessage(Service myService)
 		{
-			HL7 myRecord = HL7Builder.BuildPublishServiceMessage();
+			HL7 myRecord = HL7Builder.BuildPublishServiceMessage(myService);
 
 			return myRecord.fullHL7Message;
 		}
