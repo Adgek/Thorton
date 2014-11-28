@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HL7Records;
 
 namespace ThortonSOAService
 {
@@ -25,6 +26,8 @@ namespace ThortonSOAService
             //Register team
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = "";
+            HL7 record = HL7Builder.BuildRegisterTeamMessage();
+            command = record.fullHL7Message;
             SocketSender.StartClient(command);
 
             logger.Log(LogLevel.Info, "---\n");

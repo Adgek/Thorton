@@ -44,6 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HL7\HL7.cs" />
+    <Compile Include="HL7\HL7Builder.cs" />
+    <Compile Include="HL7\HL7Handler.cs" />
+    <Compile Include="HL7\HL7Parser.cs" />
+    <Compile Include="HL7\HL7Segment.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseTotaller.cs" />
