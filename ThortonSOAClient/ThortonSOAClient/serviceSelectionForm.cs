@@ -32,7 +32,7 @@ namespace ThortonSOAClient
                 error1.SetError(serviceSelectCB,"You must select a service before you can start.");
             }
             else
-            { 
+            {
                 this.Hide();
                 serviceCallerForm sc = new serviceCallerForm();
                 sc.Show();
