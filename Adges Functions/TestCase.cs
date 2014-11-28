@@ -56,7 +56,7 @@ namespace HL7Records
 			
 
 
-			string yoyo = handler.PublishServiceMessage(myservice);
+			string yoyo = handler.QueryServiceMessage(myservice);
 			// Console.WriteLine("FINALPRINT");
 			// Console.WriteLine(myHL7.fullHL7Message);
 			Console.WriteLine(yoyo);

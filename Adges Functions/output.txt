@@ -1,2 +1,2 @@
 Compilation succeeded - 1 warning(s)
-DRC|PUB-SERVICE|FunnyGlasses|1186|SRV|tagName|serviceName|3|2|3|description|ARG|1|argName|argDataType|mandatory|ARG|2|argName2|argDataType2|optional|RSP|1|respName|respDataType|RSP|2|respName2|respDataType2|RSP|3|DerpyMatt|he's a Derp|MCH|192.168.2.24|3128|
+DRC|QUERY-SERVICE|FunnyGlasses|1186|SRV|tagName|serviceName|3|2|3|description|

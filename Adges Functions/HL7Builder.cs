@@ -35,10 +35,18 @@ namespace HL7Records
 		}
 		
 		//Needs a method for building a Query Team message
-		public static HL7 BuildQueryTeamMessage()
+		public static HL7 BuildQueryTeamMessage(Service myService)
 		{
 			HL7 builtHL7 = new HL7();
+			string cmd = "QUERY-TEAM"; 
+			
+			//create DRC
+			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
+			//create INF
+			BuildINFSegment(builtHL7, myService.TeamName, myService.TeamID, myService.Tag);
+
+			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
 		}
 		
@@ -84,10 +92,22 @@ namespace HL7Records
 			return builtHL7; 
 		}
 		//Needs a method for building a Query Service message
-		public static HL7 BuildQueryServiceMessage()
+		public static HL7 BuildQueryServiceMessage(Service myService)
 		{
 			HL7 builtHL7 = new HL7();
+			string cmd = "QUERY-SERVICE";
+			int argsNum = myService.Arguments.Count;
+			int respNum = myService.Responses.Count;
+			
+			//create DRC
+			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
+			//create SRV
+			string serviceName = "serviceName";
+			
+			BuildSRVSegment(builtHL7, myService.Tag, serviceName, myService.SecurityLevel, argsNum, respNum, myService.Description);
+
+			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
 		}
 		//Needs a method for building a Execute Service message
