@@ -26,18 +26,19 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "---\n");
             
             string command = "";
-            
+            string ret = "";
+
             //Register team
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = handler.RegisterTeamMessage();
-            SocketSender.StartClient(command);
+            ret = SocketSender.StartClient(command);
 
             logger.Log(LogLevel.Info, "---\n");
 
             //Publish service
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = handler.PublishServiceMessage();
-            SocketSender.StartClient(command);
+            ret = SocketSender.StartClient(command);
 
             logger.Log(LogLevel.Info, "---\n");
 
