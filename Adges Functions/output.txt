@@ -1,3 +1,3 @@
 Compilation succeeded - 1 warning(s)
 FINALPRINT
-DRC|PUB-SERVICE|FunnyGlasses|1186|SRV|tagName|serviceName|2|1|description|ARG|1|argName|argDataType|mandatory|ARG|2|argName2|argDataType2|optional|RSP|1|respName|respDataType|MCH|192.168.2.32|3128|
+DRC|PUB-SERVICE|FunnyGlasses|1186|SRV|tagName|serviceName|3|2|1|description|ARG|1|argName|argDataType|mandatory|ARG|2|argName2|argDataType2|optional|RSP|1|respName|respDataType|MCH|192.168.2.24|3128|

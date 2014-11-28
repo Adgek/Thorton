@@ -60,11 +60,12 @@ namespace HL7Records
 			//TMP
 			string tagName = "tagName";
 			string serviceName = "serviceName";
+			int securityLvl = 3;
 			int argsNum = 2;
 			int respNum = 1;
 			string description = "description";
 			
-			BuildSRVSegment(builtHL7, tagName, serviceName, argsNum, respNum, description);
+			BuildSRVSegment(builtHL7, tagName, serviceName, securityLvl, argsNum, respNum, description);
 
 			//create ARG's
 			//TMP
@@ -93,7 +94,7 @@ namespace HL7Records
 			
 			//create MCH
 			//TMP
-			string IP = "192.168.2.32";
+			string IP = "192.168.2.24";
 			int port = 3128;
 
 			BuildMCHSegment(builtHL7, IP, port);
@@ -147,7 +148,7 @@ namespace HL7Records
 		}
 		
 		//Need method for creating SRV segment
-		public static void BuildSRVSegment(HL7 builtHL7, string tagName, string serviceName, int argsNum, int respNum, string description)
+		public static void BuildSRVSegment(HL7 builtHL7, string tagName, string serviceName, int securityLvl, int argsNum, int respNum, string description)
 		{
 			string segmentTitle = "SRV";
 
@@ -155,6 +156,7 @@ namespace HL7Records
 			newSegment.fields.Add(segmentTitle);
 			newSegment.fields.Add(tagName);
 			newSegment.fields.Add(serviceName);
+			newSegment.fields.Add(securityLvl.ToString());
 			newSegment.fields.Add(argsNum.ToString());
 			newSegment.fields.Add(respNum.ToString());
 			newSegment.fields.Add(description);
@@ -215,7 +217,7 @@ namespace HL7Records
 		{
 			char msgBeg = (char)11;
 			char segEnd = (char)13;
-			char msgEnd = (char)28;//Put these as CONSTS in HL7 class
+			char msgEnd = (char)28;
 
 			string messagebuilder = msgBeg.ToString();
 
