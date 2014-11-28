@@ -64,7 +64,7 @@ namespace HL7Records
 
 			//create SRV
 			//TMP
-			string serviceName = myService.ServiceName;
+			string serviceName = "serviceName";
 			
 			BuildSRVSegment(builtHL7, myService.Tag, serviceName, myService.SecurityLevel.ToString(), argsNum.ToString(), respNum.ToString(), myService.Description);
 

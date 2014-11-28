@@ -23,6 +23,8 @@ namespace ThortonSOAService
             const string TEAM_NAME = "FunnyGlasses";
             const int PORT = 11000;
 
+            string TEAM_ID = "";
+
             string command = "";
             string ret = "";
 
@@ -39,6 +41,13 @@ namespace ThortonSOAService
             command = handler.RegisterTeamMessage();
             ret = SocketSender.StartClient(command);
 
+            HL7 hl7 = handler.HandleResponse(ret);
+            if(hl7.segments[0].fields[1] != "OK")
+            {
+                //throw error
+            }
+            TEAM_ID = hl7.segments[0].fields[2];
+
             logger.Log(LogLevel.Info, "---\n");
 
             //Publish service
@@ -51,6 +60,12 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = handler.PublishServiceMessage(service);
             ret = SocketSender.StartClient(command);
+
+            hl7 = handler.HandleResponse(ret);
+            if (hl7.segments[0].fields[1] != "OK")
+            {
+                //throw error
+            }
 
             logger.Log(LogLevel.Info, "---\n");
 
