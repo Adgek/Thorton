@@ -9,7 +9,6 @@ namespace HL7Records
 		//This is the class that handles all HL7 messages and responses
 		public HL7Handler()
 		{
-			Console.WriteLine("Made the Handler");
 		}
 
 		//Needs a function for sending a Register Team message
@@ -20,7 +19,7 @@ namespace HL7Records
 			return myRecord.fullHL7Message;
 		}
 
-		//Needs a function for handling the reponse of a Register Team message
+		//Needs a function for handling the reponse of a Register Team message 
 
 		//Needs a function for sending a Unregister Team message
 		public string UnregisterTeamMessage()
@@ -33,7 +32,7 @@ namespace HL7Records
 		//Needs a function for handling the reponse of a Unregister Team message
 
 		//Needs a function for sending a Query Team message
-		public string UnregisterTeamMessage()
+		public string QueryTeamMessage()
 		{
 			HL7 myRecord = HL7Builder.BuildRegisterTeamMessage();
 
