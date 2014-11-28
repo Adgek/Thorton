@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HL7Records;
 using System.Threading;
+using SocketClass;
 
 namespace ThortonSOAService
 {

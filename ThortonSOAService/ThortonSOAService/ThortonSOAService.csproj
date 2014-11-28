@@ -35,6 +35,10 @@
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="Socket, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Socketlib\Socket\bin\Debug\Socket.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,7 +58,6 @@
     <Compile Include="PurchaseTotaller.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="SocketListener.cs" />
-    <Compile Include="SocketSender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
