@@ -1,2 +1,1 @@
-Compilation succeeded - 1 warning(s)
-DRC|QUERY-SERVICE|FunnyGlasses|1186|SRV|tagName|serviceName|3|2|3|description|
+Compilation succeeded - 1 warning(s)DRC|QUERY-SERVICE|FunnyGlasses|1186|SRV|tagName||||||
