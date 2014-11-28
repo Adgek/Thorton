@@ -35,7 +35,10 @@ namespace HL7Records
 		//Need a function for pulling list of string from a segment
 		public static List<string> GetFieldsFromSegment(string segment)
 		{
-			return new List<string>(segment.Split('|'));
+			List<string> returnList = new List<string>(segment.Split('|'));
+			//remove last empty field from list.
+			returnList.RemoveAt(returnList.Count - 1);
+			return returnList;
 		}
 
 	}

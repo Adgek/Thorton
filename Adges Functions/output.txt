@@ -1,8 +1,22 @@
 Compilation succeeded - 1 warning(s)
-SOA|OK|<teamID>|<expiration>||
+SOA|OK|<teamID>|<expiration>||
+
 SOA|OK|<teamID>|<expiration>||
 1
-2
-FINALPRINT
+Handle Response
 SOA|OK|<teamID>|<expiration>||
+SOA
+OK
+<teamID>
+<expiration>
 
+Build Exec Command
+DRC|EXEC-SERVICE|FunnyGlasses|1186|
+SRV||serviceName||2|||
+ARG|1|argName|argDataType||argValue|
+ARG|2|argName2|argDataType2||argValue|
+
+Build Query Service Command
+DRC|QUERY-SERVICE|FunnyGlasses|1186|
+SRV|tagName||||||
+

@@ -22,7 +22,7 @@ namespace HL7Records
 			responseHL7 = handler.HandleResponse(responseString);
 
 			//string yoyo = handler.QueryServiceMessage(myservice);
-			Console.WriteLine("FINALPRINT");
+			Console.WriteLine("Handle Response");
 			// Console.WriteLine(myHL7.fullHL7Message);
 			foreach (HL7Segment seg in responseHL7.segments)
 			{
@@ -33,6 +33,12 @@ namespace HL7Records
 				}
 			}
 			
+			Console.WriteLine("Build Exec Command");
+			string cmd = handler.ExecuteServiceMessage(myservice);
+			Console.WriteLine(cmd);
+			Console.WriteLine("Build Query Service Command");
+			cmd = handler.QueryServiceMessage(myservice, myservice);
+			Console.WriteLine(cmd);
 
 			return;		
 		}
