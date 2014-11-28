@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace HL7Records
 {
@@ -34,79 +35,76 @@ namespace HL7Records
 		}
 		
 		//Needs a method for building a Query Team message
-		public static HL7 BuildQueryTeamMessage()
+		public static HL7 BuildQueryTeamMessage(Service myService)
 		{
 			HL7 builtHL7 = new HL7();
+			string cmd = "QUERY-TEAM"; 
+			
+			//create DRC
+			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
+			//create INF
+			BuildINFSegment(builtHL7, myService.TeamName, myService.TeamID, myService.Tag);
+
+			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
 		}
 		
 		//Needs a method for building a Publish Service message
-		public static HL7 BuildPublishServiceMessage()
+		public static HL7 BuildPublishServiceMessage(Service myService)
 		{
 			HL7 builtHL7 = new HL7();
-			string cmd = "";
+			string cmd = "PUB-SERVICE";
+			int argsNum = myService.Arguments.Count;
+			int respNum = myService.Responses.Count;
 			
 
 			//create DRC segment
-			cmd = "PUB-SERVICE";
-			//TMP
-			string teamName = "FunnyGlasses";
-			string teamID = "1186";
-
-			BuildDRCSegment(builtHL7,cmd, teamName, teamID);
+			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
 			//create SRV
 			//TMP
-			string tagName = "tagName";
-			string serviceName = "serviceName";
-			int securityLvl = 3;
-			int argsNum = 2;
-			int respNum = 1;
-			string description = "description";
+			string serviceName = myService.ServiceName;
 			
-			BuildSRVSegment(builtHL7, tagName, serviceName, securityLvl, argsNum, respNum, description);
+			BuildSRVSegment(builtHL7, myService.Tag, serviceName, myService.SecurityLevel.ToString(), argsNum.ToString(), respNum.ToString(), myService.Description);
 
 			//create ARG's
-			//TMP
-			int argPos = 1;
-			string argName = "argName";
-			string argDataType = "argDataType";
-			bool mandatory = true;
 
-			BuildARGSegment(builtHL7, argPos, argName, argDataType, mandatory);
+			foreach (Argument arg in myService.Arguments)
+			{
+				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.ArgumentName, arg.ArgumentDataType, arg.Mandatory);
+			}
 
-			//TMP
-			argPos = 2;
-			argName = "argName2";
-			argDataType = "argDataType2";
-			mandatory = false;
-
-			BuildARGSegment(builtHL7, argPos, argName, argDataType, mandatory);
+			
 			
 			//create RSP
-			//TMP
-			int respPos = 1;
-			string respName = "respName";
-			string respDataType = "respDataType";
-
-			BuildRSPSegment(builtHL7, respPos, respName, respDataType);
+			foreach (Response resp in myService.Responses)
+			{
+				BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.ResponseName, resp.ResponseDataType);
+			}
+			
 			
 			//create MCH
-			//TMP
-			string IP = "192.168.2.24";
-			int port = 3128;
 
-			BuildMCHSegment(builtHL7, IP, port);
+			BuildMCHSegment(builtHL7, myService.IP.ToString(), myService.Port.ToString());
 			
 			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
 		}
 		//Needs a method for building a Query Service message
-		public static HL7 BuildQueryServiceMessage()
+		public static HL7 BuildQueryServiceMessage(Service myService)
 		{
 			HL7 builtHL7 = new HL7();
+			string cmd = "QUERY-SERVICE";
+			
+			//create DRC
+			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
+			//create SRV
+			
+			BuildSRVSegment(builtHL7, myService.Tag);
+
+			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
 		}
 		//Needs a method for building a Execute Service message
@@ -148,7 +146,7 @@ namespace HL7Records
 		}
 		
 		//Need method for creating SRV segment
-		public static void BuildSRVSegment(HL7 builtHL7, string tagName, string serviceName, int securityLvl, int argsNum, int respNum, string description)
+		public static void BuildSRVSegment(HL7 builtHL7, string tagName, string serviceName="", string securityLvl="", string argsNum="", string respNum="", string description="")
 		{
 			string segmentTitle = "SRV";
 
@@ -156,16 +154,16 @@ namespace HL7Records
 			newSegment.fields.Add(segmentTitle);
 			newSegment.fields.Add(tagName);
 			newSegment.fields.Add(serviceName);
-			newSegment.fields.Add(securityLvl.ToString());
-			newSegment.fields.Add(argsNum.ToString());
-			newSegment.fields.Add(respNum.ToString());
+			newSegment.fields.Add(securityLvl);
+			newSegment.fields.Add(argsNum);
+			newSegment.fields.Add(respNum);
 			newSegment.fields.Add(description);
 			newSegment.ConvertFieldsToSegmentString();
 			builtHL7.segments.Add(newSegment);	
 		}
 		
 		//Need method for creating ARG segment
-		public static void BuildARGSegment(HL7 builtHL7, int argPos, string argName, string argDataType, bool mandatory)
+		public static void BuildARGSegment(HL7 builtHL7, string argPos, string argName, string argDataType, bool mandatory)
 		{
 			string segmentTitle = "ARG";
 			string mandatoryString = "mandatory";
@@ -177,7 +175,7 @@ namespace HL7Records
 
 			HL7Segment newSegment = new HL7Segment();
 			newSegment.fields.Add(segmentTitle);
-			newSegment.fields.Add(argPos.ToString());
+			newSegment.fields.Add(argPos);
 			newSegment.fields.Add(argName);
 			newSegment.fields.Add(argDataType);
 			newSegment.fields.Add(mandatoryString);
@@ -186,13 +184,13 @@ namespace HL7Records
 		}
 		
 		//Need method for creating RSP segment
-		public static void BuildRSPSegment(HL7 builtHL7,int respPos, string respName, string respDataType)
+		public static void BuildRSPSegment(HL7 builtHL7,string respPos, string respName, string respDataType)
 		{
 			string segmentTitle = "RSP";
 
 			HL7Segment newSegment = new HL7Segment();
 			newSegment.fields.Add(segmentTitle);
-			newSegment.fields.Add(respPos.ToString());
+			newSegment.fields.Add(respPos);
 			newSegment.fields.Add(respName);
 			newSegment.fields.Add(respDataType);
 			newSegment.ConvertFieldsToSegmentString();
@@ -200,14 +198,14 @@ namespace HL7Records
 		}
 		
 		//Need method for creating MCH segment
-		public static void BuildMCHSegment(HL7 builtHL7, string IP, int port)
+		public static void BuildMCHSegment(HL7 builtHL7, string IP, string port)
 		{
 			string segmentTitle = "MCH";
 
 			HL7Segment newSegment = new HL7Segment();
 			newSegment.fields.Add(segmentTitle);
 			newSegment.fields.Add(IP);
-			newSegment.fields.Add(port.ToString());
+			newSegment.fields.Add(port);
 			newSegment.ConvertFieldsToSegmentString();
 			builtHL7.segments.Add(newSegment);
 		}

@@ -25,7 +25,7 @@ namespace ClientService
     {
         // The port number for the remote device.
         private const int PORT = 11000;
-        private const string IP_ADDRESS = "192.168.2.24";
+        private const string IP_ADDRESS = "192.168.56.1";
 
 
         // ManualResetEvent instances signal completion.

@@ -6,13 +6,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HL7Records;
 
 namespace ThortonSOAService
 {
     class SocketListener
     {
-        private const int PORT = 11000;
-        private const string IP_ADDRESS = "192.168.2.24";
+        public const int PORT = 11000;
+        public string TEAM_ID;
+        public string TEAM_NAME;
 
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -23,11 +25,15 @@ namespace ThortonSOAService
 
         public void StartListening()
         {
+            TEAM_NAME = "FunnyGlasses";
+            //QUERY FOR TEAM ID
+
             // Data buffer for incoming data.
             byte[] bytes = new Byte[1024];
 
             // Establish the local endpoint for the socket.   
-            IPAddress ipAddress = IPAddress.Parse(IP_ADDRESS);
+            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
 
             // Create a TCP/IP socket.
@@ -57,7 +63,7 @@ namespace ThortonSOAService
             }   
         }
 
-        public static void AcceptCallback(IAsyncResult ar)
+        public void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
             allDone.Set();
@@ -72,7 +78,7 @@ namespace ThortonSOAService
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
 
-        public static void ReadCallback(IAsyncResult ar)
+        public void ReadCallback(IAsyncResult ar)
         {
             String content = String.Empty;
 
@@ -88,29 +94,31 @@ namespace ThortonSOAService
             {
                 // There  might be more data, so store the data received so far.
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-
-                // Check for end-of-file tag. If it is not there, read 
-                // more data.
+          
                 content = state.sb.ToString();
-                if (content.IndexOf("<EOF>") > -1)
-                {                   
-                    // All the data has been read from the 
-                    // client. Display it on the console.
-                    Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
-                        content.Length, content);
-                    // Echo the data back to the client.
-                    Send(handler, content);
-                }
-                else
-                {
-                    // Not all data received. Get more.
-                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
-                }
+
+                //read content
+                HL7Handler hl7handler = new HL7Handler();
+                Service service = new Service(TEAM_NAME, TEAM_ID);
+           
+                //take team info
+                //query registry
+                //if team is valid {
+
+                PurchaseTotaller pt = new PurchaseTotaller("ON", "100.00");
+                pt.AddResult(1, pt.responses[0].ResponseName, pt.responses[0].ResponseDataType, pt.principal);
+                pt.AddResult(2, pt.responses[1].ResponseName, pt.responses[1].ResponseDataType, pt.GetPST());
+                pt.AddResult(3, pt.responses[2].ResponseName, pt.responses[2].ResponseDataType, pt.GetHST());
+                pt.AddResult(4, pt.responses[3].ResponseName, pt.responses[3].ResponseDataType, pt.GetGST());
+                pt.AddResult(5, pt.responses[4].ResponseName, pt.responses[4].ResponseDataType, pt.GetTotal());
+
+                //create message, return it
+
+
             }
         }
 
-        private static void Send(Socket handler, String data)
+        private void Send(Socket handler, String data)
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -119,7 +127,7 @@ namespace ThortonSOAService
             handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
