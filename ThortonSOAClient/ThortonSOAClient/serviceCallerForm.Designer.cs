@@ -36,12 +36,9 @@
             this.serviceDescriptionLbl = new System.Windows.Forms.Label();
             this.serviceNameLbl = new System.Windows.Forms.Label();
             this.teamNameLbl = new System.Windows.Forms.Label();
-            this.arg1TB = new System.Windows.Forms.TextBox();
-            this.arg1Lbl = new System.Windows.Forms.Label();
             this.serviceCallerGB = new System.Windows.Forms.GroupBox();
+            this.argPanel = new System.Windows.Forms.Panel();
             this.executeBtn = new System.Windows.Forms.Button();
-            this.arg2TB = new System.Windows.Forms.TextBox();
-            this.arg2Lbl = new System.Windows.Forms.Label();
             this.arg1Err = new System.Windows.Forms.ErrorProvider(this.components);
             this.arg2Err = new System.Windows.Forms.ErrorProvider(this.components);
             this.responseGB = new System.Windows.Forms.GroupBox();
@@ -128,65 +125,34 @@
             this.teamNameLbl.TabIndex = 0;
             this.teamNameLbl.Text = "Team Name :";
             // 
-            // arg1TB
-            // 
-            this.arg1TB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.arg1TB.Location = new System.Drawing.Point(10, 66);
-            this.arg1TB.Name = "arg1TB";
-            this.arg1TB.Size = new System.Drawing.Size(371, 26);
-            this.arg1TB.TabIndex = 1;
-            // 
-            // arg1Lbl
-            // 
-            this.arg1Lbl.AutoSize = true;
-            this.arg1Lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.arg1Lbl.Location = new System.Drawing.Point(7, 35);
-            this.arg1Lbl.Name = "arg1Lbl";
-            this.arg1Lbl.Size = new System.Drawing.Size(96, 20);
-            this.arg1Lbl.TabIndex = 2;
-            this.arg1Lbl.Text = "Argument 1:";
-            // 
             // serviceCallerGB
             // 
-            this.serviceCallerGB.Controls.Add(this.executeBtn);
-            this.serviceCallerGB.Controls.Add(this.arg2TB);
-            this.serviceCallerGB.Controls.Add(this.arg2Lbl);
-            this.serviceCallerGB.Controls.Add(this.arg1TB);
-            this.serviceCallerGB.Controls.Add(this.arg1Lbl);
+            this.serviceCallerGB.Controls.Add(this.argPanel);
             this.serviceCallerGB.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.serviceCallerGB.Location = new System.Drawing.Point(12, 255);
             this.serviceCallerGB.Name = "serviceCallerGB";
-            this.serviceCallerGB.Size = new System.Drawing.Size(417, 260);
+            this.serviceCallerGB.Size = new System.Drawing.Size(417, 274);
             this.serviceCallerGB.TabIndex = 3;
             this.serviceCallerGB.TabStop = false;
             this.serviceCallerGB.Text = "Service Calling";
             // 
+            // argPanel
+            // 
+            this.argPanel.AutoScroll = true;
+            this.argPanel.Location = new System.Drawing.Point(6, 30);
+            this.argPanel.Name = "argPanel";
+            this.argPanel.Size = new System.Drawing.Size(405, 238);
+            this.argPanel.TabIndex = 0;
+            // 
             // executeBtn
             // 
-            this.executeBtn.Location = new System.Drawing.Point(147, 208);
+            this.executeBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.executeBtn.Location = new System.Drawing.Point(155, 535);
             this.executeBtn.Name = "executeBtn";
             this.executeBtn.Size = new System.Drawing.Size(131, 46);
             this.executeBtn.TabIndex = 5;
             this.executeBtn.Text = "Execute";
             this.executeBtn.UseVisualStyleBackColor = true;
-            // 
-            // arg2TB
-            // 
-            this.arg2TB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.arg2TB.Location = new System.Drawing.Point(10, 143);
-            this.arg2TB.Name = "arg2TB";
-            this.arg2TB.Size = new System.Drawing.Size(371, 26);
-            this.arg2TB.TabIndex = 3;
-            // 
-            // arg2Lbl
-            // 
-            this.arg2Lbl.AutoSize = true;
-            this.arg2Lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.arg2Lbl.Location = new System.Drawing.Point(7, 110);
-            this.arg2Lbl.Name = "arg2Lbl";
-            this.arg2Lbl.Size = new System.Drawing.Size(96, 20);
-            this.arg2Lbl.TabIndex = 4;
-            this.arg2Lbl.Text = "Argument 2:";
             // 
             // arg1Err
             // 
@@ -202,7 +168,7 @@
             this.responseGB.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.responseGB.Location = new System.Drawing.Point(436, 12);
             this.responseGB.Name = "responseGB";
-            this.responseGB.Size = new System.Drawing.Size(397, 503);
+            this.responseGB.Size = new System.Drawing.Size(397, 569);
             this.responseGB.TabIndex = 4;
             this.responseGB.TabStop = false;
             this.responseGB.Text = "Response Output";
@@ -215,14 +181,15 @@
             this.responseTB.Name = "responseTB";
             this.responseTB.ReadOnly = true;
             this.responseTB.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.responseTB.Size = new System.Drawing.Size(385, 468);
+            this.responseTB.Size = new System.Drawing.Size(385, 534);
             this.responseTB.TabIndex = 0;
             // 
             // serviceCallerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 529);
+            this.ClientSize = new System.Drawing.Size(846, 593);
+            this.Controls.Add(this.executeBtn);
             this.Controls.Add(this.responseGB);
             this.Controls.Add(this.serviceCallerGB);
             this.Controls.Add(this.serviceInfoGB);
@@ -232,10 +199,10 @@
             this.ShowIcon = false;
             this.Text = "Service Caller";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.serviceCaller_FormClosing);
+            this.Load += new System.EventHandler(this.serviceCallerForm_Load);
             this.serviceInfoGB.ResumeLayout(false);
             this.serviceInfoGB.PerformLayout();
             this.serviceCallerGB.ResumeLayout(false);
-            this.serviceCallerGB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.arg1Err)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arg2Err)).EndInit();
             this.responseGB.ResumeLayout(false);
@@ -253,15 +220,12 @@
         private System.Windows.Forms.Label serviceDescriptionLbl;
         private System.Windows.Forms.Label serviceNameLbl;
         private System.Windows.Forms.Label teamNameLbl;
-        private System.Windows.Forms.TextBox arg1TB;
-        private System.Windows.Forms.Label arg1Lbl;
         private System.Windows.Forms.GroupBox serviceCallerGB;
-        private System.Windows.Forms.TextBox arg2TB;
-        private System.Windows.Forms.Label arg2Lbl;
         private System.Windows.Forms.Button executeBtn;
         private System.Windows.Forms.ErrorProvider arg1Err;
         private System.Windows.Forms.GroupBox responseGB;
         private System.Windows.Forms.TextBox responseTB;
         private System.Windows.Forms.ErrorProvider arg2Err;
+        private System.Windows.Forms.Panel argPanel;
     }
 }

@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HL7\HL7.cs" />
+    <Compile Include="HL7\HL7Builder.cs" />
+    <Compile Include="HL7\HL7Handler.cs" />
+    <Compile Include="HL7\HL7Parser.cs" />
+    <Compile Include="HL7\HL7Segment.cs" />
+    <Compile Include="HL7\Service.cs" />
     <Compile Include="serviceSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +70,7 @@
     <Compile Include="serviceCallerForm.Designer.cs">
       <DependentUpon>serviceCallerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI Elements\ArgumentArea.cs" />
     <EmbeddedResource Include="serviceSelectionForm.resx">
       <DependentUpon>serviceSelectionForm.cs</DependentUpon>
     </EmbeddedResource>

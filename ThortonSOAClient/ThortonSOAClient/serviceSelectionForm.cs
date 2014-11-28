@@ -9,13 +9,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SocketClass;
+using HL7Records;
+using System.Configuration;
 
 
 namespace ThortonSOAClient
 {
     public partial class serviceSelectionForm : Form
     {
+        private static string TeamName = ConfigurationManager.AppSettings["teamName"];
+
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static HL7Handler handler = new HL7Handler();
+        private static Service service = new Service();
+
+        private static string[] methods = {"GIORP-TOTAL"};
+
         public serviceSelectionForm()
         {
             InitializeComponent();
@@ -35,11 +44,22 @@ namespace ThortonSOAClient
             }
             else
             {
-                SocketSender.StartClient("some derpy message");
                 this.Hide();
                 serviceCallerForm sc = new serviceCallerForm();
                 sc.Show();
+                //string method = methods[serviceSelectCB.SelectedIndex];
+                //string command = "";
+                //string returnMsg = SocketSender.StartClient(command);
+                //if(returnMsg.Contains("SOA NOT OK"))
+                //{
+
+                //}
+                //else
+                //{ 
+                    
+                //}
             }
+
         }
     }
 }
