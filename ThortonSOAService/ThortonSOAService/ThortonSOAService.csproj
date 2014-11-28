@@ -52,6 +52,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseTotaller.cs" />
+    <Compile Include="Service.cs" />
     <Compile Include="SocketListener.cs" />
     <Compile Include="SocketSender.cs" />
   </ItemGroup>

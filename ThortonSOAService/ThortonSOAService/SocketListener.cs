@@ -21,7 +21,7 @@ namespace ThortonSOAService
         {
         }
 
-        public static void StartListening()
+        public void StartListening()
         {
             // Data buffer for incoming data.
             byte[] bytes = new Byte[1024];
