@@ -12,7 +12,8 @@ namespace ThortonSOAService
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
-        {     
+        {
+            HL7Handler handler = new HL7Handler();
             //Service Start
             logger.Log(LogLevel.Info, "==================================================================\n");
             logger.Log(LogLevel.Info, "Team\t: FunnyGlasses (Matt, Adrian, Kyle)\n");
@@ -25,9 +26,7 @@ namespace ThortonSOAService
             
             //Register team
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
-            command = "";
-            HL7 record = HL7Builder.BuildRegisterTeamMessage();
-            command = record.fullHL7Message;
+            command = handler.RegisterTeamMessage();
             SocketSender.StartClient(command);
 
             logger.Log(LogLevel.Info, "---\n");

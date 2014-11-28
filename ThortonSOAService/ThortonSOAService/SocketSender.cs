@@ -11,7 +11,7 @@ namespace ThortonSOAService
     class SocketSender
     {
         private const int PORT = 3128;
-        private const string IP_ADDRESS = "192.168.2.24";
+        private const string IP_ADDRESS = "192.168.2.32";
 
         public static string StartClient(string message)
         {
