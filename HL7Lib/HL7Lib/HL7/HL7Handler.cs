@@ -62,9 +62,9 @@ namespace HL7Lib.HL7
 		}
 
 		//Needs a function for sending a Query Service message
-		public string QueryServiceMessage(Service myService, Service queryService)
+		public string QueryServiceMessage(Service myService)
 		{
-			HL7 myRecord = HL7Builder.BuildQueryServiceMessage(myService, queryService);
+			HL7 myRecord = HL7Builder.BuildQueryServiceMessage(myService);
 
 			return myRecord.fullHL7Message;
 		}

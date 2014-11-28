@@ -97,7 +97,7 @@ namespace HL7Lib.HL7
 		}
 		
 		//Needs a method for building a Query Service message
-		public static HL7 BuildQueryServiceMessage(Service myService, Service queryService)
+		public static HL7 BuildQueryServiceMessage(Service myService)
 		{
 			HL7 builtHL7 = new HL7();
 			string cmd = "QUERY-SERVICE";
@@ -106,7 +106,7 @@ namespace HL7Lib.HL7
 			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
 			//create SRV
-			BuildSRVSegment(builtHL7, queryService.Tag);
+			BuildSRVSegment(builtHL7, myService.Tag);
 
 			FinalizeHL7Protocol(builtHL7);
 			return builtHL7; 
