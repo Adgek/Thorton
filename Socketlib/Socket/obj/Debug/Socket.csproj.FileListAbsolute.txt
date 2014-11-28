@@ -1,6 +1,0 @@
-C:\Users\Kyle\Desktop\Socket\Socket\obj\Debug\Socket.csprojResolveAssemblyReference.cache
-C:\Users\Kyle\Desktop\Socket\Socket\bin\Debug\Socket.dll.config
-C:\Users\Kyle\Desktop\Socket\Socket\bin\Debug\Socket.dll
-C:\Users\Kyle\Desktop\Socket\Socket\bin\Debug\Socket.pdb
-C:\Users\Kyle\Desktop\Socket\Socket\obj\Debug\Socket.dll
-C:\Users\Kyle\Desktop\Socket\Socket\obj\Debug\Socket.pdb
