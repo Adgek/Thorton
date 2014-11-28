@@ -12,14 +12,19 @@ namespace ThortonSOAService
         private static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-            logger.Log(LogLevel.Info, "The program has started!");
+            logger.Log(LogLevel.Info, "==================================================================\n");
+            logger.Log(LogLevel.Info, "Team\t: FunnyGlasses (Matt, Adrian, Kyle)\n");
+            logger.Log(LogLevel.Info, "Tag-Name\t: GIORP-TOTAL\n");
+            logger.Log(LogLevel.Info, "Service\t: ThortonSOAService\n");
+            logger.Log(LogLevel.Info, "==================================================================\n");
+            logger.Log(LogLevel.Info, "---\n");
             string command = "";
             //Service Start
             
             //Register team
             command = "";
             SocketSender.StartClient(command);
-
+            
             //Publish service
             command = "";
             SocketSender.StartClient(command);
