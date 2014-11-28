@@ -27,7 +27,17 @@ namespace HL7Records
 		//Constructor takes an HL7 string for responses
 		public HL7(string message):this()
 		{
+			fullHL7Message = message;
+
+			List<string> parsedSegments = HL7Parser.GetSegmentsFromMessage(fullHL7Message);
 			
+			//poplulate segments list
+			foreach (string segment in parsedSegments)
+			{
+				HL7Segment newSegment = new HL7Segment(segment);
+				segments.Add(newSegment);
+				Console.WriteLine(segments.Count);
+			}
 		}
 
 

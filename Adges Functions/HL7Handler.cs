@@ -20,7 +20,12 @@ namespace HL7Records
 			return myRecord.fullHL7Message;
 		}
 
-		//Needs a function for handling the reponse of a Register Team message 
+		//Needs a function to handle all responses
+		public HL7 HandleResponse(string response)
+		{
+			HL7 myRecord = new HL7(response);
+			return myRecord;
+		}
 
 		//Needs a function for sending a Unregister Team message
 		public string UnregisterTeamMessage()
@@ -30,8 +35,6 @@ namespace HL7Records
 			return myRecord.fullHL7Message;
 		}
 
-		//Needs a function for handling the reponse of a Unregister Team message
-
 		//Needs a function for sending a Query Team message
 		public string QueryTeamMessage(Service myService)
 		{
@@ -39,8 +42,6 @@ namespace HL7Records
 
 			return myRecord.fullHL7Message;
 		}
-
-		//Needs a function for handling the reponse of a Query Team message
 
 		//Needs a function for sending a Publish Service message
 		//done
@@ -51,8 +52,6 @@ namespace HL7Records
 			return myRecord.fullHL7Message;
 		}
 
-		//Needs a function for handling the reponse of a Publish Service message
-
 		//Needs a function for sending a Query Service message
 		public string QueryServiceMessage(Service myService)
 		{
@@ -61,8 +60,6 @@ namespace HL7Records
 			return myRecord.fullHL7Message;
 		}
 
-		//Needs a function for handling the reponse of a Query Service message
-
 		//Needs a function for sending a Execute Service message
 		public string ExecuteServiceMessage()
 		{
@@ -70,8 +67,5 @@ namespace HL7Records
 
 			return myRecord.fullHL7Message;
 		}
-
-		//Needs a function for handling the reponse of a Execute Service message
-		
 	}
 }

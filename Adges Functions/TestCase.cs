@@ -12,6 +12,47 @@ namespace HL7Records
 			HL7Handler handler = new HL7Handler();
 			//HL7 myHL7 = HL7Builder.BuildRegisterTeamMessage();
 			Service myservice = new Service();
+			HL7 responseHL7 = new HL7();
+			CreateService(myservice);
+
+			//get response string
+			string responseString = CreateResponseString();
+			
+			//put response string into response handler
+			responseHL7 = handler.HandleResponse(responseString);
+
+			//string yoyo = handler.QueryServiceMessage(myservice);
+			Console.WriteLine("FINALPRINT");
+			// Console.WriteLine(myHL7.fullHL7Message);
+			foreach (HL7Segment seg in responseHL7.segments)
+			{
+				Console.WriteLine(seg.segment);
+				foreach (string field in seg.fields)
+				{
+					Console.WriteLine(field);
+				}
+			}
+			
+
+			return;		
+		}
+
+
+		public static string CreateResponseString()
+		{
+			char msgBeg = (char)11;
+			char segEnd = (char)13;
+			char msgEnd = (char)28;
+			string responseString = "SOA|OK|<teamID>|<expiration>||";
+
+			string messagebuilder = msgBeg.ToString();
+			messagebuilder += responseString;
+
+			messagebuilder += segEnd.ToString() + msgEnd.ToString() + segEnd.ToString();
+			return messagebuilder;
+		}
+		public static void CreateService(Service myservice)
+		{
 			myservice.TeamName="FunnyGlasses";
 			myservice.TeamID = "1186";
 			myservice.Tag = "tagName";
@@ -53,16 +94,6 @@ namespace HL7Records
 			myservice.Responses.Add(firstResp);
 			myservice.Responses.Add(secondResp);
 			myservice.Responses.Add(thirdResp);
-			
-
-
-			string yoyo = handler.QueryServiceMessage(myservice);
-			// Console.WriteLine("FINALPRINT");
-			// Console.WriteLine(myHL7.fullHL7Message);
-			Console.WriteLine(yoyo);
-			
-
-			return;		
 		}
 	}
 }

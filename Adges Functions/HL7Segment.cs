@@ -21,6 +21,8 @@ namespace HL7Records
 		public HL7Segment(string fullSegment)
 		{
 			segment = fullSegment;
+
+			fields = HL7Parser.GetFieldsFromSegment(fullSegment);
 		}
 
 		public void ConvertFieldsToSegmentString()

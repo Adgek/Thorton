@@ -1,1 +1,8 @@
-Compilation succeeded - 1 warning(s)DRC|QUERY-SERVICE|FunnyGlasses|1186|SRV|tagName||||||
+Compilation succeeded - 1 warning(s)
+SOA|OK|<teamID>|<expiration>||
+SOA|OK|<teamID>|<expiration>||
+1
+2
+FINALPRINT
+SOA|OK|<teamID>|<expiration>||
+

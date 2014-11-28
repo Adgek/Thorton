@@ -10,9 +10,33 @@ namespace HL7Records
 			//This could maybe be a static class.
 
 		//Need a function for pulling segments from a message
+		public static List<string> GetSegmentsFromMessage(string message)
+		{
+			
 
+			char msgBeg = (char)11;
+			char segEnd = (char)13;
+			char msgEnd = (char)28;
+			//remove char11 from beggining
+			//remove char28, char13 from end
+			Console.WriteLine(message);
+			message = message.Replace(msgBeg.ToString(), "");
+			message = message.Replace(msgEnd.ToString()+segEnd.ToString(), "");
+			//message = message.Trim(new char[] {msgBeg, msgEnd.ToString()+seg.ToString()});
+			Console.WriteLine(message);
+			//string.split on char 13
+			List<string> returnList = new List<string>(message.Split(segEnd));
+
+			//remove last empty field from list.
+			returnList.RemoveAt(returnList.Count - 1);
+			return returnList;
+		}
+		
 		//Need a function for pulling list of string from a segment
-
+		public static List<string> GetFieldsFromSegment(string segment)
+		{
+			return new List<string>(segment.Split('|'));
+		}
 
 	}
 }
