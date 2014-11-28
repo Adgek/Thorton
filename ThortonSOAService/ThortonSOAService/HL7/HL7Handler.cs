@@ -11,14 +11,9 @@ namespace HL7Records
 		{
 		}
 
-		//Needs a function for sending a Register Team message
-		//done
-		public string RegisterTeamMessage()
-		{
-			HL7 myRecord = HL7Builder.BuildRegisterTeamMessage();
-
-			return myRecord.fullHL7Message;
-		}
+		//********************************
+		//Response Handlers
+		//********************************
 
 		//Needs a function to handle all responses
 		public HL7 HandleResponse(string response)
@@ -27,18 +22,33 @@ namespace HL7Records
 			return myRecord;
 		}
 
-		//Needs a function for sending a Unregister Team message
-		public string UnregisterTeamMessage()
+
+
+		//********************************
+		//Handle Message Builders
+		//********************************
+
+		//Needs a function for sending a Register Team message
+		//done
+		public string RegisterTeamMessage(Service myService)
 		{
-			HL7 myRecord = HL7Builder.BuildRegisterTeamMessage();
+			HL7 myRecord = HL7Builder.BuildRegisterTeamMessage(myService);
+
+			return myRecord.fullHL7Message;
+		}
+
+		//Needs a function for sending a Unregister Team message
+		public string UnregisterTeamMessage(Service myService)
+		{
+			HL7 myRecord = HL7Builder.BuildUnregisterTeamMessage(myService);
 
 			return myRecord.fullHL7Message;
 		}
 
 		//Needs a function for sending a Query Team message
-		public string QueryTeamMessage(Service myService)
+		public string QueryTeamMessage(Service myService, Service queryService)
 		{
-			HL7 myRecord = HL7Builder.BuildQueryTeamMessage(myService);
+			HL7 myRecord = HL7Builder.BuildQueryTeamMessage(myService, queryService);
 
 			return myRecord.fullHL7Message;
 		}
@@ -53,17 +63,17 @@ namespace HL7Records
 		}
 
 		//Needs a function for sending a Query Service message
-		public string QueryServiceMessage(Service myService)
+		public string QueryServiceMessage(Service myService, Service queryService)
 		{
-			HL7 myRecord = HL7Builder.BuildQueryServiceMessage(myService);
+			HL7 myRecord = HL7Builder.BuildQueryServiceMessage(myService, queryService);
 
 			return myRecord.fullHL7Message;
 		}
 
 		//Needs a function for sending a Execute Service message
-		public string ExecuteServiceMessage()
+		public string ExecuteServiceMessage(Service myService)
 		{
-			HL7 myRecord = HL7Builder.BuildExecuteServiceMessage();
+			HL7 myRecord = HL7Builder.BuildExecuteServiceMessage(myService);
 
 			return myRecord.fullHL7Message;
 		}

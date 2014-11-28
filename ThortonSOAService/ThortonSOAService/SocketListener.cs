@@ -32,7 +32,9 @@ namespace ThortonSOAService
             //QUERY FOR TEAM ID
             HL7Handler hl7h = new HL7Handler();
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
-            string command = hl7h.RegisterTeamMessage();
+            Service team = new Service();
+            team.TeamName = TEAM_NAME;
+            string command = hl7h.RegisterTeamMessage(team);
             string ret = SocketSender.StartClient(command);
 
             HL7 hl7 = hl7h.HandleResponse(ret);
@@ -120,25 +122,53 @@ namespace ThortonSOAService
                 //read content               
                 HL7Handler hl7h = new HL7Handler();
                 HL7 record = hl7h.HandleResponse(content);
-                //take team info               
-                Service service = new Service(TEAM_NAME, TEAM_ID);
-                Service teamService = new Service("", "");
 
-                string command = hl7h.QueryTeamMessage(service);
+                //take team info    
+                //query registry           
+                Service service = new Service(TEAM_NAME, TEAM_ID);
+                Service teamService = new Service(record.segments[0].fields[2], record.segments[0].fields[3]);
+
+                string command = hl7h.QueryTeamMessage(service, teamService);
                 string ret = SocketSender.StartClient(command);
 
                 HL7 hl7 = hl7h.HandleResponse(ret);
-                //query registry
+                
                 //if team is valid {
+                if (hl7.segments[0].fields[1] == "OK")
+                {
+                    //create message, return it
+                    string province;
+                    string principle;
 
-                PurchaseTotaller pt = new PurchaseTotaller("ON", "100.00");
-                pt.AddResult(1, pt.responses[0].ResponseName, pt.responses[0].ResponseDataType, pt.principal);
-                pt.AddResult(2, pt.responses[1].ResponseName, pt.responses[1].ResponseDataType, pt.GetPST());
-                pt.AddResult(3, pt.responses[2].ResponseName, pt.responses[2].ResponseDataType, pt.GetHST());
-                pt.AddResult(4, pt.responses[3].ResponseName, pt.responses[3].ResponseDataType, pt.GetGST());
-                pt.AddResult(5, pt.responses[4].ResponseName, pt.responses[4].ResponseDataType, pt.GetTotal());
+                    if (hl7.segments[2].fields[1] == "1")
+                    {
+                        province = hl7.segments[2].fields[2];
+                        principle = hl7.segments[3].fields[2];
+                    }
+                    else
+                    {
+                        province = hl7.segments[3].fields[2];
+                        principle = hl7.segments[2].fields[2];
+                    }
 
-                //create message, return it
+                    PurchaseTotaller pt = new PurchaseTotaller(province, principle);
+                    pt.AddResult(1, pt.responses[0].ResponseName, pt.responses[0].ResponseDataType, pt.principal);
+                    pt.AddResult(2, pt.responses[1].ResponseName, pt.responses[1].ResponseDataType, pt.GetPST());
+                    pt.AddResult(3, pt.responses[2].ResponseName, pt.responses[2].ResponseDataType, pt.GetHST());
+                    pt.AddResult(4, pt.responses[3].ResponseName, pt.responses[3].ResponseDataType, pt.GetGST());
+                    pt.AddResult(5, pt.responses[4].ResponseName, pt.responses[4].ResponseDataType, pt.GetTotal());
+
+                    Service response = new Service();
+                    response.Responses = pt.responses;
+
+                }
+                else
+                {
+                    //log error
+                }
+                
+
+                
 
 
             }

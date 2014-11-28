@@ -19,7 +19,7 @@ namespace ThortonSOAService
         {
             HL7Handler handler = new HL7Handler();
 
-            const string SERVICE_NAME = "ThortonSOAService";
+            const string SERVICE_NAME = "PurchaseTotaller";
             const string TEAM_NAME = "FunnyGlasses";
             const int PORT = 11000;
 
@@ -32,14 +32,19 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "==================================================================\n");
             logger.Log(LogLevel.Info, "Team\t: FunnyGlasses (Matt, Adrian, Kyle)\n");
             logger.Log(LogLevel.Info, "Tag-Name\t: GIORP-TOTAL\n");
-            logger.Log(LogLevel.Info, "Service\t: ThortonSOAService\n");
+            logger.Log(LogLevel.Info, "Service\t: PurchaseTotaller\n");
             logger.Log(LogLevel.Info, "==================================================================\n");
             logger.Log(LogLevel.Info, "---\n");                   
          
             //Register team
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
-            command = handler.RegisterTeamMessage();
+            Service register = new Service();
+            register.TeamName = TEAM_NAME;
+            command = handler.RegisterTeamMessage(register);
+            logger.Log(LogLevel.Info, "\t>> " + command + "\n");
             ret = SocketSender.StartClient(command);
+            logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
+            logger.Log(LogLevel.Info, "\t\t>> " + ret + "\n");
 
             HL7 hl7 = handler.HandleResponse(ret);
             if(hl7.segments[0].fields[1] != "OK")
@@ -51,15 +56,17 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "---\n");
 
             //Publish service
-            string id = "1186";
             PurchaseTotaller pt = new PurchaseTotaller();
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            Service service = new Service(SERVICE_NAME, TEAM_NAME, id, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, PORT);
+            Service service = new Service(SERVICE_NAME, TEAM_NAME, TEAM_ID, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, PORT);
 
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = handler.PublishServiceMessage(service);
+            logger.Log(LogLevel.Info, "\t>> " + command + "\n");
             ret = SocketSender.StartClient(command);
+            logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
+            logger.Log(LogLevel.Info, "\t\t>> " + ret + "\n");
 
             hl7 = handler.HandleResponse(ret);
             if (hl7.segments[0].fields[1] != "OK")
