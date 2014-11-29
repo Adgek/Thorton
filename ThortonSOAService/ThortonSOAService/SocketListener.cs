@@ -19,10 +19,11 @@ namespace ThortonSOAService
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        public const int PORT = 11000;
+        public int PORT;
         public string TEAM_ID;
         public string TEAM_NAME;
         public string SERVICE_TAG;
+        public string SERVICE_IP;
 
         string RegistryIp;
         int RegistryPort;
@@ -35,7 +36,7 @@ namespace ThortonSOAService
             TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
 
             RegistryIp = ConfigurationManager.AppSettings["RegistryIP"];
-            
+
             int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
 
             //QUERY FOR TEAM ID
@@ -59,17 +60,20 @@ namespace ThortonSOAService
 
             logger.Log(LogLevel.Info, "---\n");
 
-            SERVICE_TAG = ConfigurationManager.AppSettings["purchaseTotallerTag"];
+            SERVICE_TAG = ConfigurationManager.AppSettings["TagName"];
+            SERVICE_IP = ConfigurationManager.AppSettings["ServiceIP"];
+            string SERVICE_PORT = ConfigurationManager.AppSettings["ServicePort"];
+            Int32.TryParse(SERVICE_PORT, out PORT);
         }
 
         public void StartListening()
-        { 
+        {
             // Data buffer for incoming data.
             byte[] bytes = new Byte[1024];
 
             // Establish the local endpoint for the socket.   
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[1];
+            //IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPAddress ipAddress = IPAddress.Parse(SERVICE_IP);
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
 
             // Create a TCP/IP socket.
@@ -87,7 +91,7 @@ namespace ThortonSOAService
                     allDone.Reset();
 
                     // Start an asynchronous socket to listen for connections.                
-                    listener.BeginAccept( new AsyncCallback(AcceptCallback), listener);
+                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
 
                     // Wait until a connection is made before continuing.
                     allDone.WaitOne();
@@ -95,8 +99,8 @@ namespace ThortonSOAService
             }
             catch (Exception e)
             {
-                
-            }   
+
+            }
         }
 
         public void AcceptCallback(IAsyncResult ar)
@@ -132,7 +136,7 @@ namespace ThortonSOAService
             {
                 // There  might be more data, so store the data received so far.
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-          
+
                 content = state.sb.ToString();
                 logger.Log(LogLevel.Info, "\t>> " + content);
                 logger.Log(LogLevel.Info, "---");
@@ -149,7 +153,7 @@ namespace ThortonSOAService
                 string ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
 
                 HL7 hl7 = hl7h.HandleResponse(ret);
-                
+
                 //if team is valid {
                 if (hl7.segments[0].fields[1] == "OK")
                 {
@@ -214,7 +218,7 @@ namespace ThortonSOAService
             }
             catch (Exception e)
             {
-               
+
             }
         }
 
