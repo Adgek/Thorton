@@ -215,13 +215,13 @@ namespace HL7Lib.HL7
 			string segmentTitle = "ARG";
 			string mandatoryString = "";
 
-			if (mandatory == "false")
+			if (mandatory == "False")
 			{
 				mandatoryString = "optional";
 			}
-			if (mandatory == "true")
+			if (mandatory == "True")
 			{
-				mandatory = "mandatory";
+				mandatoryString = "mandatory";
 			}
 
 			HL7Segment newSegment = new HL7Segment();
