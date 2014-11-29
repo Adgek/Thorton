@@ -51,19 +51,40 @@ namespace ThortonSOAClient
             else
             {
                 service = new Service();
-                string method = methods[serviceSelectCB.SelectedIndex];
-                string command = "";
-                string returnMsg = SocketSender.StartClient(command);
-                if (returnMsg.Contains("SOA NOT OK"))
+                service.TeamName = TeamName;
+                HL7 returnMsg;
+                try
                 {
-                
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.RegisterTeamMessage(service)));
+                   
+                }
+                catch(Exception ex)
+                {
+                    throw new NotImplementedException(ex.Message);
+                }
+                List<string> fields = returnMsg.segments.FirstOrDefault().fields;
+                if (fields[1] == "OK")
+                {                    
+                    service.TeamID = fields[2];
+                    service.Tag = methods[serviceSelectCB.SelectedIndex];
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.QueryServiceMessage(service)));
+                    fields = returnMsg.segments.FirstOrDefault().fields;
+
+                    if (fields[1] == "OK")
+                    {
+                        this.Hide();
+                        serviceCallerForm sc = new serviceCallerForm(returnMsg);
+                        sc.Show();
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    } 
                 }
                 else
                 {
-                    this.Hide();
-                    serviceCallerForm sc = new serviceCallerForm();
-                    sc.Show();
-                }
+                    throw new NotImplementedException();
+                }                
             }            
         }
     }

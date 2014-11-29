@@ -34,6 +34,12 @@ namespace HL7Lib.ServiceData
             TeamID = id;
         }
 
+        public Service(string name, string id, string tagName)
+            : this(name, id)
+        {
+            Tag = tagName;
+        }
+
         public Service(string sname, string name, string id, string tag, int sec, string desc, List<Argument> args, List<Response> resps, IPAddress ip, int port)
         {
             Arguments = args;

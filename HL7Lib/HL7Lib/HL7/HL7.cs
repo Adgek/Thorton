@@ -36,7 +36,6 @@ namespace HL7Lib.HL7
 			{
 				HL7Segment newSegment = new HL7Segment(segment);
 				segments.Add(newSegment);
-				Console.WriteLine(segments.Count);
 			}
 		}
 

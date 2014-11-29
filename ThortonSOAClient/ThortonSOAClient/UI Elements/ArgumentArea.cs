@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HL7Lib.ServiceData;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,27 +9,20 @@ using System.Windows.Forms;
 
 namespace ThortonSOAClient.UI_Elements
 {
-    public class ArgumentArea
+    public class UiArgument : Argument
     {
-        public ArgumentArea(string argumentName)
+        public UiArgument(int pos, string name, string datatype, bool man)
+            : base(pos,  name,  datatype,  man)
         {
             Tb = new TextBox();
-            Tb.Name = argumentName + "TB";
+            Tb.Name = ArgumentName + "TB";
             Tb.Font = new Font(FontFamily.GenericSansSerif, 12f);
             Tb.Size = new Size(300,10);
             Lbl = new Label();
             Lbl.Font = new Font(FontFamily.GenericSansSerif, 12f);
-            Lbl.Name = argumentName + "LBL";
-            Lbl.Text = argumentName;
+            Lbl.Name = ArgumentName + "LBL";
+            Lbl.Text = ArgumentName;
             Err = new ErrorProvider();
-        }
-
-        private string _argumentName;
-
-        public string ArgumentName
-        {
-            get { return _argumentName; }
-            set { _argumentName = value; }
         }
 
         private TextBox _tb;
