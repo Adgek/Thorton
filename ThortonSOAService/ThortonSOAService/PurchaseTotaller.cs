@@ -58,12 +58,10 @@ namespace ThortonSOAService
             results = new List<Message>();
         }
 
-        public PurchaseTotaller(string Province, string Principal) : this()
+        public PurchaseTotaller(string Province, double Principal) : this()
         {
-            province = Array.IndexOf(provinceCode, Province);
-            double temp;
-            double.TryParse(Principal, out temp);
-            principal = temp;
+            province = Array.IndexOf(provinceCode, Province);           
+            principal = Principal;
         }
 
         public double GetPST()

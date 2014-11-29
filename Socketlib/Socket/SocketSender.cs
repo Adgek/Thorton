@@ -52,23 +52,15 @@ namespace SocketClass
                     sender.Close();
 
                     result = Encoding.ASCII.GetString(bytes);
-                }
-                catch (ArgumentNullException ane)
-                {
-
-                }
-                catch (SocketException se)
-                {
-
-                }
+                }             
                 catch (Exception e)
                 {
-
+                    throw e;
                 }
             }
             catch (Exception e)
             {
-
+                throw e;
             }
 
             return result;

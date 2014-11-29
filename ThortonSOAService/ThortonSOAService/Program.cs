@@ -126,7 +126,8 @@ namespace ThortonSOAService
                         Console.WriteLine("Could not publish the service");
                         return;
                     }                  
-                }                
+                }
+                
             }
             else
             {

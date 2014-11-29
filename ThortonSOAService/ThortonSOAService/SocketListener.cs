@@ -196,6 +196,7 @@ namespace ThortonSOAService
                     if (hl7.segments[0].fields[1] != "OK")
                     {
                         logger.Log(LogLevel.Error, "Could not validate team");
+                        logger.Log(LogLevel.Error, "\t>> " + ret);
                         Console.WriteLine("Could not validate team");
                         return;
                     }
@@ -216,7 +217,20 @@ namespace ThortonSOAService
                             principle = record.segments[2].fields[5];
                         }
 
-                        PurchaseTotaller pt = new PurchaseTotaller(province, principle);
+                        double p = 0;
+                        try {
+                            p = double.Parse(principle);
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Log(LogLevel.Error, "Principal " + p + " is not a valid value");
+                        }
+
+                        PurchaseTotaller pt = new PurchaseTotaller(province, p);
+                        if (pt.province == -1)
+                        {
+                            logger.Log(LogLevel.Error, "Province " + province + " could not be found");
+                        }
                         pt.AddResult(1, pt.responses[0].Name, pt.responses[0].DataType, pt.principal);
                         pt.AddResult(2, pt.responses[1].Name, pt.responses[1].DataType, pt.GetPST());
                         pt.AddResult(3, pt.responses[2].Name, pt.responses[2].DataType, pt.GetHST());
@@ -243,6 +257,7 @@ namespace ThortonSOAService
         {
             logger.Log(LogLevel.Info, "Responding to service request :\n");
             logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(data));
+            logger.Log(LogLevel.Info, "---\n");
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 

@@ -64,7 +64,7 @@ namespace ClientService
                 char e = (char)28;
                 string cmd = b.ToString() + "DRC|EXEC-SERVICE|FunnyGlasses|1186|" + se.ToString() +
                                 "SRV||PurchaseTotaller||2|||" + se.ToString() +
-                                "ARG|1|province|string||ON|" + se.ToString() +
+                                "ARG|1|province|string||66|" + se.ToString() +
                                 "ARG|2|principal|double||100|" + se.ToString() + e.ToString() + se.ToString();
 
                 // Send test data to the remote device.
