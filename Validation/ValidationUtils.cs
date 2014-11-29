@@ -39,6 +39,18 @@ namespace Soa2.Validation
             }
         }
 
+        public static double ParseFloatFromString(string number)
+        {
+            try
+            {
+                return Convert.ToDouble(number);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static char ParseCharFromString(string number)
         {
             try
