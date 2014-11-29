@@ -22,7 +22,7 @@ namespace HL7Lib.ServiceData
             Mandatory = true;
         }
 
-        public Message(int pos, string name, string datatype, bool man, string value = "")
+        public Message(int pos, string name, string datatype, bool man = true, string value = "")
         {
             Position = pos;
             Name = name;
