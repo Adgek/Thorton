@@ -23,11 +23,16 @@ namespace ThortonSOAService
             HL7Handler handler = new HL7Handler();
 
             string SERVICE_NAME = ConfigurationManager.AppSettings["ServiceName"];
+            string SERVICE_IP = ConfigurationManager.AppSettings["ServiceIP"];
+            string SERVICE_PORT = ConfigurationManager.AppSettings["ServicePort"];
             string TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
             string TAG_NAME = ConfigurationManager.AppSettings["TagName"];
-            const int PORT = 11000;
+
+            int PORT = 0;
+            Int32.TryParse(SERVICE_PORT, out PORT);
 
             string RegistryIp = ConfigurationManager.AppSettings["RegistryIP"];
+            
             int RegistryPort = 0;
             int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
 
@@ -65,8 +70,8 @@ namespace ThortonSOAService
 
             //Publish service
             PurchaseTotaller pt = new PurchaseTotaller();
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[1];
+            //IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPAddress ipAddress = IPAddress.Parse(SERVICE_IP);
             Service service = new Service(SERVICE_NAME, TEAM_NAME, TEAM_ID, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, PORT);
 
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
