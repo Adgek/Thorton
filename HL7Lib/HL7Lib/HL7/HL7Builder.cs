@@ -78,15 +78,15 @@ namespace HL7Lib.HL7
 			BuildSRVSegment(builtHL7, myService.Tag, serviceName, myService.SecurityLevel.ToString(), argsNum.ToString(), respNum.ToString(), myService.Description);
 
 			//create ARG's
-			foreach (Argument arg in myService.Arguments)
+			foreach (Message arg in myService.Arguments)
 			{
-				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.ArgumentName, arg.ArgumentDataType, arg.Mandatory.ToString());
+				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.Name, arg.DataType, arg.Mandatory.ToString());
 			}
 
 			//create RSP
-			foreach (Response resp in myService.Responses)
+			foreach (Message resp in myService.Responses)
 			{
-				BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.ResponseName, resp.ResponseDataType);
+				BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.Name, resp.DataType);
 			}
 			
 			//create MCH
@@ -126,9 +126,9 @@ namespace HL7Lib.HL7
 			BuildSRVSegment(builtHL7, serviceName: myService.ServiceName, argsNum: argsNum.ToString());
 
 			//create ARG's
-			foreach (Argument arg in myService.Arguments)
+			foreach (Message arg in myService.Arguments)
 			{
-				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.ArgumentName, arg.ArgumentDataType, argValue: arg.Value);
+				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.Name, arg.DataType, argValue: arg.Value);
 			}
 
 			FinalizeHL7Protocol(builtHL7);
@@ -144,9 +144,9 @@ namespace HL7Lib.HL7
             BuildPUBSegment(builtHL7, "OK", numOfSegments: respNum.ToString());
 
             //create RSP
-            foreach (Response resp in myService.Responses)
+            foreach (Message resp in myService.Responses)
             {
-                BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.ResponseName, resp.ResponseDataType, resp.value);
+                BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.Name, resp.DataType, resp.Value);
             }
 
             FinalizeHL7Protocol(builtHL7);

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{17E5CEF8-1508-44D8-8695-7056A2A31314}</ProjectGuid>
+    <ProjectGuid>{D0E9F7FE-D7AC-4630-9FFD-2D46473AA24D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HL7Lib</RootNamespace>
-    <AssemblyName>HL7Lib</AssemblyName>
+    <RootNamespace>ValidationLib</RootNamespace>
+    <AssemblyName>ValidationLib</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="HL7Lib">
+      <HintPath>..\..\HL7Lib\HL7Lib\bin\Debug\HL7Lib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,14 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HL7\HL7.cs" />
-    <Compile Include="HL7\HL7Builder.cs" />
-    <Compile Include="HL7\HL7Handler.cs" />
-    <Compile Include="HL7\HL7Parser.cs" />
-    <Compile Include="HL7\HL7Segment.cs" />
+    <Compile Include="BooleanValidator.cs" />
+    <Compile Include="CharValidator.cs" />
+    <Compile Include="DoubleValidator.cs" />
+    <Compile Include="FloatValidator.cs" />
+    <Compile Include="IntValidator.cs" />
+    <Compile Include="LongValidator.cs" />
+    <Compile Include="ParameterValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceData\Message.cs" />
-    <Compile Include="ServiceData\Service.cs" />
+    <Compile Include="ShortValidator.cs" />
+    <Compile Include="StringValidator.cs" />
+    <Compile Include="ValidationUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

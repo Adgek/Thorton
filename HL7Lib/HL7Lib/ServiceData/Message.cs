@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace HL7Lib.ServiceData
 {
-    public class Argument
+    public class Message
     {
         public int Position;
-        public string ArgumentName;
-        public string ArgumentDataType;
+        public string Name;
+        public string DataType;
         public bool Mandatory;
         public string Value;
 
-        public Argument()
+        public Message()
         {
             Position = 0;
-            ArgumentName = "";
-            ArgumentDataType = "";
+            Name = "";
+            DataType = "";
             Mandatory = true;
         }
 
-        public Argument(int pos, string name, string datatype, bool man, string value = "")
+        public Message(int pos, string name, string datatype, bool man, string value = "")
         {
             Position = pos;
-            ArgumentName = name;
-            ArgumentDataType = datatype;
+            Name = name;
+            DataType = datatype;
             Mandatory = man;
             Value = value;
         }

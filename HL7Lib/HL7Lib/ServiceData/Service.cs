@@ -16,16 +16,16 @@ namespace HL7Lib.ServiceData
         public int SecurityLevel;
         public string Description;
 
-        public List<Argument> Arguments;
-        public List<Response> Responses;
+        public List<Message> Arguments;
+        public List<Message> Responses;
 
         public IPAddress IP;
         public int Port;
 
         public Service()
         {
-            Arguments = new List<Argument>();
-            Responses = new List<Response>();                      
+            Arguments = new List<Message>();
+            Responses = new List<Message>();                      
         }
 
         public Service(string name, string id) : this()
@@ -40,7 +40,7 @@ namespace HL7Lib.ServiceData
             Tag = tagName;
         }
 
-        public Service(string sname, string name, string id, string tag, int sec, string desc, List<Argument> args, List<Response> resps, IPAddress ip, int port)
+        public Service(string sname, string name, string id, string tag, int sec, string desc, List<Message> args, List<Message> resps, IPAddress ip, int port)
         {
             Arguments = args;
             Responses = resps;
