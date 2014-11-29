@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HL7Records;
+using HL7Lib;
 using System.Threading;
 using SocketClass;
 using System.Net;
+using HL7Lib.HL7;
+using HL7Lib.ServiceData;
 
 namespace ThortonSOAService
 {

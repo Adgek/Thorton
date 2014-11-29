@@ -6,10 +6,12 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using HL7Records;
+using HL7Lib;
 using SocketClass;
 using NLog;
 using System.Configuration;
+using HL7Lib.HL7;
+using HL7Lib.ServiceData;
 
 namespace ThortonSOAService
 {
