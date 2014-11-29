@@ -24,6 +24,9 @@ namespace ThortonSOAClient
         private static HL7Handler handler = new HL7Handler();
         private static Service service;
 
+        private static string registryIP = ConfigurationManager.AppSettings["registryipaddress"];
+        private static int registryPort = Convert.ToInt32(ConfigurationManager.AppSettings["registryport"]);
+
         private static string[] methods = ConfigurationManager.AppSettings["tagNames"].Split('|');
         private static string[] serviceNames = ConfigurationManager.AppSettings["serviceNames"].Split('|');
 
@@ -55,7 +58,7 @@ namespace ThortonSOAClient
                 HL7 returnMsg;
                 try
                 {
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.RegisterTeamMessage(service)));
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.RegisterTeamMessage(service), registryIP, registryPort));
                    
                 }
                 catch(Exception ex)
@@ -67,13 +70,13 @@ namespace ThortonSOAClient
                 {                    
                     service.TeamID = fields[2];
                     service.Tag = methods[serviceSelectCB.SelectedIndex];
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.QueryServiceMessage(service)));
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.QueryServiceMessage(service), registryIP, registryPort));
                     fields = returnMsg.segments.FirstOrDefault().fields;
 
                     if (fields[1] == "OK")
                     {
                         this.Hide();
-                        serviceCallerForm sc = new serviceCallerForm(returnMsg);
+                        serviceCallerForm sc = new serviceCallerForm(returnMsg, service.TeamName, service.TeamID);
                         sc.Show();
                     }
                     else

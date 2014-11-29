@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.serviceInfoGB = new System.Windows.Forms.GroupBox();
             this.serviceNameTB = new System.Windows.Forms.TextBox();
             this.teamNametb = new System.Windows.Forms.TextBox();
@@ -39,14 +38,10 @@
             this.serviceCallerGB = new System.Windows.Forms.GroupBox();
             this.argPanel = new System.Windows.Forms.Panel();
             this.executeBtn = new System.Windows.Forms.Button();
-            this.arg1Err = new System.Windows.Forms.ErrorProvider(this.components);
-            this.arg2Err = new System.Windows.Forms.ErrorProvider(this.components);
             this.responseGB = new System.Windows.Forms.GroupBox();
             this.responseTB = new System.Windows.Forms.TextBox();
             this.serviceInfoGB.SuspendLayout();
             this.serviceCallerGB.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.arg1Err)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arg2Err)).BeginInit();
             this.responseGB.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -153,14 +148,7 @@
             this.executeBtn.TabIndex = 5;
             this.executeBtn.Text = "Execute";
             this.executeBtn.UseVisualStyleBackColor = true;
-            // 
-            // arg1Err
-            // 
-            this.arg1Err.ContainerControl = this;
-            // 
-            // arg2Err
-            // 
-            this.arg2Err.ContainerControl = this;
+            this.executeBtn.Click += new System.EventHandler(this.executeBtn_Click);
             // 
             // responseGB
             // 
@@ -203,8 +191,6 @@
             this.serviceInfoGB.ResumeLayout(false);
             this.serviceInfoGB.PerformLayout();
             this.serviceCallerGB.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.arg1Err)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arg2Err)).EndInit();
             this.responseGB.ResumeLayout(false);
             this.responseGB.PerformLayout();
             this.ResumeLayout(false);
@@ -222,10 +208,8 @@
         private System.Windows.Forms.Label teamNameLbl;
         private System.Windows.Forms.GroupBox serviceCallerGB;
         private System.Windows.Forms.Button executeBtn;
-        private System.Windows.Forms.ErrorProvider arg1Err;
         private System.Windows.Forms.GroupBox responseGB;
         private System.Windows.Forms.TextBox responseTB;
-        private System.Windows.Forms.ErrorProvider arg2Err;
         private System.Windows.Forms.Panel argPanel;
     }
 }

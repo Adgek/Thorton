@@ -4,10 +4,9 @@ C:\Users\Kyle\Desktop\Socket\Socket\bin\Debug\Socket.dll
 C:\Users\Kyle\Desktop\Socket\Socket\bin\Debug\Socket.pdb
 C:\Users\Kyle\Desktop\Socket\Socket\obj\Debug\Socket.dll
 C:\Users\Kyle\Desktop\Socket\Socket\obj\Debug\Socket.pdb
+E:\Documents\GitHub\Thorton\Socketlib\Socket\bin\Debug\App.config
 E:\Documents\GitHub\Thorton\Socketlib\Socket\bin\Debug\Socket.dll.config
 E:\Documents\GitHub\Thorton\Socketlib\Socket\bin\Debug\Socket.dll
 E:\Documents\GitHub\Thorton\Socketlib\Socket\bin\Debug\Socket.pdb
-E:\Documents\GitHub\Thorton\Socketlib\Socket\obj\Debug\Socket.csprojResolveAssemblyReference.cache
 E:\Documents\GitHub\Thorton\Socketlib\Socket\obj\Debug\Socket.dll
 E:\Documents\GitHub\Thorton\Socketlib\Socket\obj\Debug\Socket.pdb
-E:\Documents\GitHub\Thorton\Socketlib\Socket\bin\Debug\App.config

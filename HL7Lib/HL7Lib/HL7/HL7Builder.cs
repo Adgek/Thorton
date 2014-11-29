@@ -123,16 +123,12 @@ namespace HL7Lib.HL7
 			BuildDRCSegment(builtHL7,cmd, myService.TeamName, myService.TeamID);
 
 			//create SRV
-			//TMP
-			string serviceName = "serviceName";
-			BuildSRVSegment(builtHL7, serviceName: serviceName, argsNum: argsNum.ToString());
+			BuildSRVSegment(builtHL7, serviceName: myService.ServiceName, argsNum: argsNum.ToString());
 
 			//create ARG's
-			//TMP
-			string argValue = "argValue";
 			foreach (Argument arg in myService.Arguments)
 			{
-				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.ArgumentName, arg.ArgumentDataType, argValue: argValue);
+				BuildARGSegment(builtHL7, arg.Position.ToString(), arg.ArgumentName, arg.ArgumentDataType, argValue: arg.Value);
 			}
 
 			FinalizeHL7Protocol(builtHL7);

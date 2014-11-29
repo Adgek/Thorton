@@ -12,6 +12,7 @@ namespace HL7Lib.ServiceData
         public string ArgumentName;
         public string ArgumentDataType;
         public bool Mandatory;
+        public string Value;
 
         public Argument()
         {
@@ -21,12 +22,13 @@ namespace HL7Lib.ServiceData
             Mandatory = true;
         }
 
-        public Argument(int pos, string name, string datatype, bool man)
+        public Argument(int pos, string name, string datatype, bool man, string value = "")
         {
             Position = pos;
             ArgumentName = name;
             ArgumentDataType = datatype;
             Mandatory = man;
+            Value = value;
         }
     }
 }

@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="HL7Lib">
       <HintPath>..\..\HL7Lib\HL7Lib\bin\Debug\HL7Lib.dll</HintPath>
     </Reference>

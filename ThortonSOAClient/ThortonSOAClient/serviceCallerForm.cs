@@ -1,5 +1,6 @@
 ﻿using HL7Lib.HL7;
 using HL7Lib.ServiceData;
+using SocketClass;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,18 +24,26 @@ namespace ThortonSOAClient
 
         private static List<Response> responseDefinitions = new List<Response>();
 
-        private string ServiceIp = "";
-        private string ServicePort = "";
+        private static HL7Handler handler = new HL7Handler();
 
+        private string ServiceIp = "";
+        private int ServicePort = 0;
+
+        private string OurTeamName = "";
+        private string OurTeamId = "";
+
+    
         public serviceCallerForm()
         {
             InitializeComponent();
         }
 
-        public serviceCallerForm(HL7 message)
+        public serviceCallerForm(HL7 message, string teamName, string id)
         {
             InitializeComponent();
             ServiceInformation = message;
+            OurTeamName = teamName;
+            OurTeamId = id;
         }
 
         private void serviceCaller_FormClosing(object sender, FormClosingEventArgs e)
@@ -71,8 +80,7 @@ namespace ThortonSOAClient
                 }
             }
             ServiceIp = ServiceInformation.segments[x].fields[1];
-            ServicePort = ServiceInformation.segments[x].fields[2];
-
+            ServicePort = Convert.ToInt32(ServiceInformation.segments[x].fields[2]);
         }
 
         private void CreateInputArea(List<List<string>> argInfo)
@@ -88,6 +96,56 @@ namespace ThortonSOAClient
                 argPanel.Controls.Add(a.Lbl);
                 yLocation += 65;
             }
+        }
+
+        private void executeBtn_Click(object sender, EventArgs e)
+        {
+            Service service = new Service(OurTeamName,OurTeamId);
+            Boolean isValid = GetArgumentValuesAndValidateInput(service);
+            if (isValid)
+            {
+                service.ServiceName = (serviceNameTB.Text);
+                string cmd = handler.ExecuteServiceMessage(service);
+                string rep = SocketSender.StartClient(cmd, ServiceIp, ServicePort);
+                HL7 returnMsg = handler.HandleResponse(rep);
+                DisplayOutput(returnMsg);
+            }
+        }
+
+        private void DisplayOutput(HL7 returnMsg)
+        {
+            if (returnMsg.segments[0].fields[0] != "PUB" || returnMsg.segments[0].fields[1] != "OK")
+            {
+                // error out
+            }
+            int numResponses = Convert.ToInt32(returnMsg.segments[0].fields[4]);
+            int x = 1;
+            if (returnMsg.segments[x].fields[0] == "RSP")
+            {
+                responseTB.Text += "|-----------------------------------------------------|" + Environment.NewLine;
+                responseTB.Text += "|                    Response                            |" + Environment.NewLine;
+                responseTB.Text += "|-----------------------------------------------------|" + Environment.NewLine;
+                for (; x < numResponses + 1; x++)
+                {
+                    responseTB.Text += "RSP " + x + Environment.NewLine;
+                    responseTB.Text += " Return Field: " + returnMsg.segments[x].fields[2] + Environment.NewLine;
+                    responseTB.Text += " Return Value: " + returnMsg.segments[x].fields[4] + Environment.NewLine + Environment.NewLine;
+                }
+            }
+        }
+
+        private Boolean GetArgumentValuesAndValidateInput(Service serv)
+        {
+            Boolean valid = true;
+            Argument arg;
+            foreach(UiArgument Argument in argumentElements)
+            {
+                string value = Argument.Tb.Text;
+                    //if valid, call method
+                arg = new Argument(Argument.Position, Argument.ArgumentName, Argument.ArgumentDataType, Argument.Mandatory, value);
+                serv.Arguments.Add(arg);
+            }
+            return valid;
         }
     }
 }
