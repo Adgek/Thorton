@@ -19,11 +19,9 @@ namespace HL7Lib.HL7
 			char msgEnd = (char)28;
 			//remove char11 from beggining
 			//remove char28, char13 from end
-			Console.WriteLine(message);
 			message = message.Replace(msgBeg.ToString(), "");
 			message = message.Replace(msgEnd.ToString()+segEnd.ToString(), "");
 			//message = message.Trim(new char[] {msgBeg, msgEnd.ToString()+seg.ToString()});
-			Console.WriteLine(message);
 			//string.split on char 13
 			List<string> returnList = new List<string>(message.Split(segEnd));
 

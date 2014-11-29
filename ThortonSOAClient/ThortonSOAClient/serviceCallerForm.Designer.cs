@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.serviceInfoGB = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.serviceNameTB = new System.Windows.Forms.TextBox();
             this.teamNametb = new System.Windows.Forms.TextBox();
             this.serviceDescTB = new System.Windows.Forms.TextBox();
             this.serviceDescriptionLbl = new System.Windows.Forms.Label();
@@ -52,7 +52,7 @@
             // 
             // serviceInfoGB
             // 
-            this.serviceInfoGB.Controls.Add(this.textBox1);
+            this.serviceInfoGB.Controls.Add(this.serviceNameTB);
             this.serviceInfoGB.Controls.Add(this.teamNametb);
             this.serviceInfoGB.Controls.Add(this.serviceDescTB);
             this.serviceInfoGB.Controls.Add(this.serviceDescriptionLbl);
@@ -66,14 +66,14 @@
             this.serviceInfoGB.TabStop = false;
             this.serviceInfoGB.Text = "Service Information";
             // 
-            // textBox1
+            // serviceNameTB
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(165, 74);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(176, 26);
-            this.textBox1.TabIndex = 5;
+            this.serviceNameTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serviceNameTB.Location = new System.Drawing.Point(165, 74);
+            this.serviceNameTB.Name = "serviceNameTB";
+            this.serviceNameTB.ReadOnly = true;
+            this.serviceNameTB.Size = new System.Drawing.Size(176, 26);
+            this.serviceNameTB.TabIndex = 5;
             // 
             // teamNametb
             // 
@@ -214,7 +214,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox serviceInfoGB;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox serviceNameTB;
         private System.Windows.Forms.TextBox teamNametb;
         private System.Windows.Forms.TextBox serviceDescTB;
         private System.Windows.Forms.Label serviceDescriptionLbl;
