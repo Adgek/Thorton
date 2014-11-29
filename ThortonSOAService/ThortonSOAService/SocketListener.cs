@@ -40,7 +40,8 @@ namespace ThortonSOAService
             int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
 
             //QUERY FOR TEAM ID
-            HL7Handler hl7h = new HL7Handler();
+            HL7Handler hl7h = new HL7Handler(); 
+            logger.Log(LogLevel.Info, "Retrieving team id...\n");
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             Service team = new Service();
             team.TeamName = TEAM_NAME;
