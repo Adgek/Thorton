@@ -38,5 +38,41 @@ namespace Soa2.Validation
                 throw e;
             }
         }
+
+        public static char ParseCharFromString(string number)
+        {
+            try
+            {
+                return Convert.ToChar(number);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static short ParseShortFromString(string number)
+        {
+            try
+            {
+                return Convert.ToInt16(number);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static long ParseLongFromString(string number)
+        {
+            try
+            {
+                return Convert.ToInt64(number);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
