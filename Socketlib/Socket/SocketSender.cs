@@ -14,8 +14,10 @@ namespace SocketClass
         private static int PORT = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
         private static string IP_ADDRESS = ConfigurationManager.AppSettings["ipaddress"];
 
-        public static string StartClient(string message)
+        public static string StartClient(string message, string ip, int port)
         {
+            IP_ADDRESS = ip;
+            PORT = port;
             string result = "";
             // Data buffer for incoming data.
             byte[] bytes = new byte[1024];
@@ -50,9 +52,6 @@ namespace SocketClass
                     sender.Close();
 
                     result = Encoding.ASCII.GetString(bytes);
-
-
-
                 }
                 catch (ArgumentNullException ane)
                 {

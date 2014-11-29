@@ -142,15 +142,15 @@ namespace HL7Lib.HL7
         public static HL7 BuildServiceResponseMessage(Service myService)
         {
             HL7 builtHL7 = new HL7();
-            int argsNum = myService.Arguments.Count;
+            int respNum = myService.Responses.Count;
 
             //create PUB
-            BuildPUBSegment(builtHL7, "OK",numOfSegments: "3");
+            BuildPUBSegment(builtHL7, "OK", numOfSegments: respNum.ToString());
 
             //create RSP
             foreach (Response resp in myService.Responses)
             {
-                BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.ResponseName, resp.ResponseDataType,"response1");
+                BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.ResponseName, resp.ResponseDataType, resp.value);
             }
 
             FinalizeHL7Protocol(builtHL7);

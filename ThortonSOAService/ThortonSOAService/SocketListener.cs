@@ -24,6 +24,9 @@ namespace ThortonSOAService
         public string TEAM_NAME;
         public string SERVICE_TAG;
 
+        string RegistryIp;
+        int RegistryPort;
+
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
@@ -31,13 +34,17 @@ namespace ThortonSOAService
         {
             TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
 
+            RegistryIp = ConfigurationManager.AppSettings["RegistryIP"];
+            
+            int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
+
             //QUERY FOR TEAM ID
             HL7Handler hl7h = new HL7Handler();
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             Service team = new Service();
             team.TeamName = TEAM_NAME;
             string command = hl7h.RegisterTeamMessage(team);
-            string ret = SocketSender.StartClient(command);
+            string ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
 
             HL7 hl7 = hl7h.HandleResponse(ret);
             if (hl7.segments[0].fields[1] != "OK")
@@ -129,9 +136,9 @@ namespace ThortonSOAService
                 //query registry           
                 Service service = new Service(TEAM_NAME, TEAM_ID);
                 Service teamService = new Service(record.segments[0].fields[2], record.segments[0].fields[3]);
-
+                teamService.Tag = ConfigurationManager.AppSettings["TagName"];
                 string command = hl7h.QueryTeamMessage(service, teamService);
-                string ret = SocketSender.StartClient(command);
+                string ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
 
                 HL7 hl7 = hl7h.HandleResponse(ret);
                 
@@ -142,15 +149,15 @@ namespace ThortonSOAService
                     string province;
                     string principle;
 
-                    if (hl7.segments[2].fields[1] == "1")
+                    if (record.segments[2].fields[1] == "1")
                     {
-                        province = hl7.segments[2].fields[2];
-                        principle = hl7.segments[3].fields[2];
+                        province = record.segments[2].fields[5];
+                        principle = record.segments[3].fields[5];
                     }
                     else
                     {
-                        province = hl7.segments[3].fields[2];
-                        principle = hl7.segments[2].fields[2];
+                        province = record.segments[3].fields[5];
+                        principle = record.segments[2].fields[5];
                     }
 
                     PurchaseTotaller pt = new PurchaseTotaller(province, principle);
@@ -161,8 +168,10 @@ namespace ThortonSOAService
                     pt.AddResult(5, pt.responses[4].ResponseName, pt.responses[4].ResponseDataType, pt.GetTotal());
 
                     Service response = new Service();
-                    response.Responses = pt.responses;
+                    response.Responses = pt.results;
 
+                    ret = hl7h.BuildResponseMessage(response);
+                    Send(handler, ret);
                 }
                 else
                 {

@@ -79,7 +79,7 @@ namespace HL7Lib.HL7
 
         public string BuildResponseMessage(Service myService)
         {
-            HL7 myRecord = HL7Builder.BuildExecuteServiceMessage(myService);
+            HL7 myRecord = HL7Builder.BuildServiceResponseMessage(myService);
 
             return myRecord.fullHL7Message;
         }

@@ -27,6 +27,10 @@ namespace ThortonSOAService
             string TAG_NAME = ConfigurationManager.AppSettings["TagName"];
             const int PORT = 11000;
 
+            string RegistryIp = ConfigurationManager.AppSettings["RegistryIP"];
+            int RegistryPort = 0;
+            int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
+
             string TEAM_ID = "";
 
             string command = "";
@@ -46,7 +50,7 @@ namespace ThortonSOAService
             register.TeamName = TEAM_NAME;
             command = handler.RegisterTeamMessage(register);
             logger.Log(LogLevel.Info, "\t>> " + command + "\n");
-            ret = SocketSender.StartClient(command);
+            ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
             logger.Log(LogLevel.Info, "\t\t>> " + ret + "\n");
 
@@ -68,7 +72,7 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = handler.PublishServiceMessage(service);
             logger.Log(LogLevel.Info, "\t>> " + command + "\n");
-            ret = SocketSender.StartClient(command);
+            ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
             logger.Log(LogLevel.Info, "\t\t>> " + ret + "\n");
 

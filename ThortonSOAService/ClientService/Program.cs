@@ -59,8 +59,16 @@ namespace ClientService
                     new AsyncCallback(ConnectCallback), client);
                 connectDone.WaitOne();
 
+                char b = (char)11;
+                char se = (char)13;
+                char e = (char)28;
+                string cmd = b.ToString() + "DRC|EXEC-SERVICE|FunnyGlasses|1150|" + se.ToString() +
+                                "SRV||PurchaseTotaller||2|||" + se.ToString() +
+                                "ARG|1|province|string||ON|" + se.ToString() +
+                                "ARG|2|principal|double||100|" + se.ToString() + e.ToString() + se.ToString();
+
                 // Send test data to the remote device.
-                Send(client, "This is a test<EOF>");
+                Send(client, cmd);
                 sendDone.WaitOne();
 
                 // Receive the response from the remote device.
