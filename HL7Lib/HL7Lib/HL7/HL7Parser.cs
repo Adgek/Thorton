@@ -11,9 +11,7 @@ namespace HL7Lib.HL7
 
 		//Need a function for pulling segments from a message
 		public static List<string> GetSegmentsFromMessage(string message)
-		{
-			
-
+		{	
 			char msgBeg = (char)11;
 			char segEnd = (char)13;
 			char msgEnd = (char)28;
@@ -38,6 +36,19 @@ namespace HL7Lib.HL7
 			returnList.RemoveAt(returnList.Count - 1);
 			return returnList;
 		}
+
+        public static string LogSegment(string message)
+        {
+            char msgBeg = (char)11;
+			char segEnd = (char)13;
+			char msgEnd = (char)28;
+            
+            message = message.Replace(msgBeg.ToString(), "");
+            message = message.Replace(msgEnd.ToString() + segEnd.ToString(), "");
+            message = message.Replace(segEnd.ToString(), "\n");
+
+            return message;
+        }
 
 	}
 }

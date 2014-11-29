@@ -71,10 +71,10 @@ namespace ThortonSOAService
             Service register = new Service();
             register.TeamName = TEAM_NAME;
             command = handler.RegisterTeamMessage(register);
-            logger.Log(LogLevel.Info, "\t>> " + command + "\n");
+            logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(command) + "\n");
             ret = SocketSender.StartClient(command, REGISTRY_IP, RegistryPort);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
-            logger.Log(LogLevel.Info, "\t\t>> " + ret + "\n");
+            logger.Log(LogLevel.Info, "\t\t>> " + HL7Parser.LogSegment(ret) + "\n");
 
             if (ret.Contains("SOA"))
             {
@@ -105,10 +105,10 @@ namespace ThortonSOAService
 
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             command = handler.PublishServiceMessage(service);
-            logger.Log(LogLevel.Info, "\t>> " + command + "\n");
+            logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(command) + "\n");
             ret = SocketSender.StartClient(command, REGISTRY_IP, RegistryPort);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
-            logger.Log(LogLevel.Info, "\t\t>> " + ret + "\n");
+            logger.Log(LogLevel.Info, "\t\t>> " + HL7Parser.LogSegment(ret) + "\n");
 
             if (ret.Contains("SOA"))
             {

@@ -33,38 +33,72 @@ namespace ThortonSOAService
 
         public SocketListener()
         {
+            logger.Log(LogLevel.Info, "Starting to listen for connections\n");
+            logger.Log(LogLevel.Info, "---");
+
             TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
 
             RegistryIp = ConfigurationManager.AppSettings["RegistryIP"];
 
-            int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
-
+            try
+            {
+                int.TryParse(ConfigurationManager.AppSettings["RegistryPort"], out RegistryPort);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Invalid registry port read from config file: " + e.Message);
+                Console.WriteLine("Invalid registry port read from config file. Exiting.");
+                return;
+            }
+            
             //QUERY FOR TEAM ID
             HL7Handler hl7h = new HL7Handler(); 
             logger.Log(LogLevel.Info, "Retrieving team id...\n");
+            logger.Log(LogLevel.Info, "---");
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             Service team = new Service();
             team.TeamName = TEAM_NAME;
             string command = hl7h.RegisterTeamMessage(team);
-            logger.Log(LogLevel.Info, "\t>> " + command);
+            logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(command));
             string ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
-            logger.Log(LogLevel.Info, "\t\t>> " + ret);
+            logger.Log(LogLevel.Info, "\t\t>> " + HL7Parser.LogSegment(ret));
 
-            HL7 hl7 = hl7h.HandleResponse(ret);
-            if (hl7.segments[0].fields[1] != "OK")
+            if (ret.Contains("SOA"))
             {
-                //throw error
-            }
+                HL7 hl7 = hl7h.HandleResponse(ret);
 
-            TEAM_ID = hl7.segments[0].fields[2];
+                if (hl7.segments[0].fields[1] != "OK")
+                {
+                    logger.Log(LogLevel.Error, "Could not retrieve team id");
+                    Console.WriteLine("Could not retrieve team id");
+                    return;
+                }
+                TEAM_ID = hl7.segments[0].fields[2];
+            }
+            else
+            {
+                logger.Log(LogLevel.Error, "Invalid response from registry");
+                Console.WriteLine("Invalid response from registry");
+                return;
+            }            
 
             logger.Log(LogLevel.Info, "---\n");
 
             SERVICE_TAG = ConfigurationManager.AppSettings["TagName"];
             SERVICE_IP = ConfigurationManager.AppSettings["ServiceIP"];
             string SERVICE_PORT = ConfigurationManager.AppSettings["ServicePort"];
-            Int32.TryParse(SERVICE_PORT, out PORT);
+
+            try
+            {
+                Int32.TryParse(SERVICE_PORT, out PORT);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Invalid service port read from config file: " + e.Message);
+                Console.WriteLine("Invalid service port read from config file. Exiting.");
+                return;
+            }            
         }
 
         public void StartListening()
@@ -100,7 +134,9 @@ namespace ThortonSOAService
             }
             catch (Exception e)
             {
-
+                logger.Log(LogLevel.Error, "Could not bind to socket at ip: " + localEndPoint.Address +" port: "+ localEndPoint.Port +" : " + e.Message);
+                Console.WriteLine("Could not bind to socket at ip: " + localEndPoint.Address + " port: " + localEndPoint.Port + ". Exiting.");
+                return;
             }
         }
 
@@ -139,7 +175,7 @@ namespace ThortonSOAService
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
 
                 content = state.sb.ToString();
-                logger.Log(LogLevel.Info, "\t>> " + content);
+                logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(content));
                 logger.Log(LogLevel.Info, "---");
                 //read content               
                 HL7Handler hl7h = new HL7Handler();
@@ -153,48 +189,60 @@ namespace ThortonSOAService
                 string command = hl7h.QueryTeamMessage(service, teamService);
                 string ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
 
-                HL7 hl7 = hl7h.HandleResponse(ret);
-
-                //if team is valid {
-                if (hl7.segments[0].fields[1] == "OK")
+                if (ret.Contains("SOA"))
                 {
-                    //create message, return it
-                    string province;
-                    string principle;
+                    HL7 hl7 = hl7h.HandleResponse(ret);
 
-                    if (record.segments[2].fields[1] == "1")
+                    if (hl7.segments[0].fields[1] != "OK")
                     {
-                        province = record.segments[2].fields[5];
-                        principle = record.segments[3].fields[5];
+                        logger.Log(LogLevel.Error, "Could not validate team");
+                        Console.WriteLine("Could not validate team");
+                        return;
                     }
                     else
                     {
-                        province = record.segments[3].fields[5];
-                        principle = record.segments[2].fields[5];
-                    }
+                        //create message, return it
+                        string province;
+                        string principle;
 
-                    PurchaseTotaller pt = new PurchaseTotaller(province, principle);
-                    pt.AddResult(1, pt.responses[0].ResponseName, pt.responses[0].ResponseDataType, pt.principal);
-                    pt.AddResult(2, pt.responses[1].ResponseName, pt.responses[1].ResponseDataType, pt.GetPST());
-                    pt.AddResult(3, pt.responses[2].ResponseName, pt.responses[2].ResponseDataType, pt.GetHST());
-                    pt.AddResult(4, pt.responses[3].ResponseName, pt.responses[3].ResponseDataType, pt.GetGST());
-                    pt.AddResult(5, pt.responses[4].ResponseName, pt.responses[4].ResponseDataType, pt.GetTotal());
+                        if (record.segments[2].fields[1] == "1")
+                        {
+                            province = record.segments[2].fields[5];
+                            principle = record.segments[3].fields[5];
+                        }
+                        else
+                        {
+                            province = record.segments[3].fields[5];
+                            principle = record.segments[2].fields[5];
+                        }
 
-                    Service response = new Service();
-                    response.Responses = pt.results;
+                        PurchaseTotaller pt = new PurchaseTotaller(province, principle);
+                        pt.AddResult(1, pt.responses[0].Name, pt.responses[0].DataType, pt.principal);
+                        pt.AddResult(2, pt.responses[1].Name, pt.responses[1].DataType, pt.GetPST());
+                        pt.AddResult(3, pt.responses[2].Name, pt.responses[2].DataType, pt.GetHST());
+                        pt.AddResult(4, pt.responses[3].Name, pt.responses[3].DataType, pt.GetGST());
+                        pt.AddResult(5, pt.responses[4].Name, pt.responses[4].DataType, pt.GetTotal());
 
-                    ret = hl7h.BuildResponseMessage(response);
-                    Send(handler, ret);
+                        Service response = new Service();
+                        response.Responses = pt.results;
+
+                        ret = hl7h.BuildResponseMessage(response);
+                        Send(handler, ret);
+                    }   
                 }
                 else
                 {
-                    //log error
+                    logger.Log(LogLevel.Error, "Invalid response from registry");
+                    Console.WriteLine("Invalid response from registry");
+                    return;
                 }
             }
         }
 
         private void Send(Socket handler, String data)
         {
+            logger.Log(LogLevel.Info, "Responding to service request :\n");
+            logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(data));
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
@@ -211,15 +259,16 @@ namespace ThortonSOAService
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
-
+                
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
 
             }
             catch (Exception e)
             {
-
+                logger.Log(LogLevel.Error, "Could not send response to client : " + e.Message);
+                Console.WriteLine("Could not send response to client.");
+                return;
             }
         }
 

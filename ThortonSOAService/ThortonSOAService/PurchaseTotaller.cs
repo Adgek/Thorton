@@ -17,10 +17,10 @@ namespace ThortonSOAService
         public double principal { get; set; }
         public int province { get; set; }
 
-        public List<Argument> arguments;
-        public List<Response> responses;
+        public List<Message> arguments;
+        public List<Message> responses;
 
-        public List<Response> results;
+        public List<Message> results;
 
         private readonly string[] provinceCode = new string[] { "NL", "NS", "NB", "PE", "QC", "ON", "MB", "SK", "AB", "BC", "YT", "NT", "NU" };
         private readonly double[,] gsthstpst = new double[,] 
@@ -49,13 +49,13 @@ namespace ThortonSOAService
 
         public PurchaseTotaller() 
         {
-            arguments = new List<Argument>();
+            arguments = new List<Message>();
             SetArguments();
 
-            responses = new List<Response>();
+            responses = new List<Message>();
             SetResponses();
 
-            results = new List<Response>();
+            results = new List<Message>();
         }
 
         public PurchaseTotaller(string Province, string Principal) : this()
@@ -120,8 +120,8 @@ namespace ThortonSOAService
 
         private void SetArguments()
         {
-            Argument arg1 = new Argument(1, "province", "string", true);
-            Argument arg2 = new Argument(2, "principal", "double", true);
+            Message arg1 = new Message(1, "province", "string", true);
+            Message arg2 = new Message(2, "principal", "double", true);
 
             arguments.Add(arg1);
             arguments.Add(arg2);
@@ -129,11 +129,11 @@ namespace ThortonSOAService
 
         private void SetResponses()
         {
-            Response res1 = new Response(1, "SubTotalAmount", "double");
-            Response res2 = new Response(2, "PSTAmount", "double");
-            Response res3 = new Response(3, "HSTAmount", "double");
-            Response res4 = new Response(4, "GSTAmount", "double");
-            Response res5 = new Response(5, "TotalPurchaseAmount", "double");
+            Message res1 = new Message(1, "SubTotalAmount", "double");
+            Message res2 = new Message(2, "PSTAmount", "double");
+            Message res3 = new Message(3, "HSTAmount", "double");
+            Message res4 = new Message(4, "GSTAmount", "double");
+            Message res5 = new Message(5, "TotalPurchaseAmount", "double");
 
             responses.Add(res1);
             responses.Add(res2);
@@ -144,7 +144,7 @@ namespace ThortonSOAService
 
         public void AddResult(int pos, string name, string datatype, double value)
         {
-            Response result = new Response(pos, name, datatype, value.ToString());
+            Message result = new Message(pos, name, datatype, value:value.ToString());
             results.Add(result);
         }        
     }

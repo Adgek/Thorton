@@ -25,7 +25,7 @@ namespace ClientService
     {
         // The port number for the remote device.
         private const int PORT = 11000;
-        private const string IP_ADDRESS = "192.168.56.1";
+        private const string IP_ADDRESS = "10.113.21.29";
 
 
         // ManualResetEvent instances signal completion.
@@ -62,7 +62,7 @@ namespace ClientService
                 char b = (char)11;
                 char se = (char)13;
                 char e = (char)28;
-                string cmd = b.ToString() + "DRC|EXEC-SERVICE|FunnyGlasses|1150|" + se.ToString() +
+                string cmd = b.ToString() + "DRC|EXEC-SERVICE|FunnyGlasses|1186|" + se.ToString() +
                                 "SRV||PurchaseTotaller||2|||" + se.ToString() +
                                 "ARG|1|province|string||ON|" + se.ToString() +
                                 "ARG|2|principal|double||100|" + se.ToString() + e.ToString() + se.ToString();
