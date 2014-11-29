@@ -39,7 +39,7 @@ namespace ThortonSOAService
             //Service Start
             logger.Log(LogLevel.Info, "==================================================================\n");
             logger.Log(LogLevel.Info, "Team\t: " + TEAM_NAME + "(Matt, Adrian, Kyle)\n");
-            logger.Log(LogLevel.Info, "Tag-Name\t: " + TAG_NAME + "\n");
+            logger.Log(LogLevel.Info, "Tag-Name : " + TAG_NAME + "\n");
             logger.Log(LogLevel.Info, "Service\t: " + SERVICE_NAME + "\n");
             logger.Log(LogLevel.Info, "==================================================================\n");
             logger.Log(LogLevel.Info, "---\n");                   
@@ -66,7 +66,7 @@ namespace ThortonSOAService
             //Publish service
             PurchaseTotaller pt = new PurchaseTotaller();
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPAddress ipAddress = ipHostInfo.AddressList[1];
             Service service = new Service(SERVICE_NAME, TEAM_NAME, TEAM_ID, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, PORT);
 
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");

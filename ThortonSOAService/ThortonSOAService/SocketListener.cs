@@ -44,14 +44,19 @@ namespace ThortonSOAService
             Service team = new Service();
             team.TeamName = TEAM_NAME;
             string command = hl7h.RegisterTeamMessage(team);
+            logger.Log(LogLevel.Info, "\t>> " + command);
             string ret = SocketSender.StartClient(command, RegistryIp, RegistryPort);
+            logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
+            logger.Log(LogLevel.Info, "\t\t>> " + ret);
 
             HL7 hl7 = hl7h.HandleResponse(ret);
             if (hl7.segments[0].fields[1] != "OK")
             {
                 //throw error
             }
+
             TEAM_ID = hl7.segments[0].fields[2];
+
             logger.Log(LogLevel.Info, "---\n");
 
             SERVICE_TAG = ConfigurationManager.AppSettings["purchaseTotallerTag"];
@@ -64,7 +69,7 @@ namespace ThortonSOAService
 
             // Establish the local endpoint for the socket.   
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPAddress ipAddress = ipHostInfo.AddressList[1];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
 
             // Create a TCP/IP socket.
@@ -111,6 +116,8 @@ namespace ThortonSOAService
 
         public void ReadCallback(IAsyncResult ar)
         {
+            logger.Log(LogLevel.Info, "Receiving service request :\n");
+
             String content = String.Empty;
 
             // Retrieve the state object and the handler socket
@@ -127,7 +134,8 @@ namespace ThortonSOAService
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
           
                 content = state.sb.ToString();
-
+                logger.Log(LogLevel.Info, "\t>> " + content);
+                logger.Log(LogLevel.Info, "---");
                 //read content               
                 HL7Handler hl7h = new HL7Handler();
                 HL7 record = hl7h.HandleResponse(content);
