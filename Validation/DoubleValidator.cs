@@ -12,26 +12,21 @@ namespace Soa2.Validation
     class DoubleValidator : ParameterValidator
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        int min = 0;
-        int max = 0;
+
         double Value;
         /// <summary>
-        /// Float validator
+        /// Double validator
         /// </summary>
-        /// <param name="Max">the max value allowed for the float</param>
-        /// <param name="Min">the min value allowed for the float</param>
-        public DoubleValidator(int Max, int Min)
+        public DoubleValidator()
         {
-            min = Min;
-            max = Max;
-            RuleFor(param => param.Value).Must(BeANumber).WithMessage("This value must be a number.").Must(BeWithinRAnge).WithMessage("This value must be within the range of " + min + " to " + max + ".");
+            RuleFor(param => param.Value).Must(BeADouble).WithMessage("This value must be a Double.").Must(BeWithinRAnge).WithMessage("This value must be within the range of " + min + " to " + max + ".");
         }
 
         /// <summary>
-        /// makes sure the value is a number
+        /// makes sure the value is a Double
         /// </summary>
         /// <param name="value">the string to check</param>
-        /// <returns>true: is a number, false: is not a number</returns>
+        /// <returns>true: is a Double, false: is not a Double</returns>
         private Boolean BeADouble(string value)
         {
             try

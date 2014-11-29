@@ -12,26 +12,22 @@ namespace Soa2.Validation
     class CharValidator : ParameterValidator
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        int min = 0;
-        int max = 0;
+
         char Value;
+
         /// <summary>
-        /// Float validator
+        /// Char validator
         /// </summary>
-        /// <param name="Max">the max value allowed for the float</param>
-        /// <param name="Min">the min value allowed for the float</param>
-        public CharValidator(int Max, int Min)
+        public CharValidator()
         {
-            min = Min;
-            max = Max;
-            RuleFor(param => param.Value).Must(BeANumber).WithMessage("This value must be a number.").Must(BeWithinRAnge).WithMessage("This value must be within the range of " + min + " to " + max + ".");
+			RuleFor(param => param.Value).Must(BeAChar).WithMessage("This value must be a Char."));
         }
 
         /// <summary>
-        /// makes sure the value is a number
+        /// makes sure the value is a char
         /// </summary>
         /// <param name="value">the string to check</param>
-        /// <returns>true: is a number, false: is not a number</returns>
+        /// <returns>true: is a char, false: is not a char</returns>
         private Boolean BeAChar(string value)
         {
             try

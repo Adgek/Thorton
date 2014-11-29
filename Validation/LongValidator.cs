@@ -12,26 +12,21 @@ namespace Soa2.Validation
     class LongValidator : ParameterValidator
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        int min = 0;
-        int max = 0;
+
         long Value;
         /// <summary>
-        /// Float validator
+        /// Long validator
         /// </summary>
-        /// <param name="Max">the max value allowed for the float</param>
-        /// <param name="Min">the min value allowed for the float</param>
-        public LongValidator(int Max, int Min)
+        public LongValidator()
         {
-            min = Min;
-            max = Max;
-            RuleFor(param => param.Value).Must(BeANumber).WithMessage("This value must be a number.").Must(BeWithinRAnge).WithMessage("This value must be within the range of " + min + " to " + max + ".");
+            RuleFor(param => param.Value).Must(BeALong).WithMessage("This value must be a Long."));
         }
 
         /// <summary>
-        /// makes sure the value is a number
+        /// makes sure the value is a Long
         /// </summary>
         /// <param name="value">the string to check</param>
-        /// <returns>true: is a number, false: is not a number</returns>
+        /// <returns>true: is a Long, false: is not a Long</returns>
         private Boolean BeALong(string value)
         {
             try
