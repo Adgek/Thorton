@@ -32,7 +32,7 @@ namespace ValidationLib
                 Value = ValidationUtils.ParseFloatFromString(value);
                 return true;
             }
-            catch(Exception e)
+            catch
             {
                 return false;
             }

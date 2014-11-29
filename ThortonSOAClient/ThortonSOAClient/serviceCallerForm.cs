@@ -1,4 +1,5 @@
-﻿using HL7Lib.HL7;
+﻿using FluentValidation.Results;
+using HL7Lib.HL7;
 using HL7Lib.ServiceData;
 using SocketClass;
 using System;
@@ -8,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ThortonSOAClient.UI_Elements;
@@ -22,7 +24,7 @@ namespace ThortonSOAClient
 
         private static int yLocation = 10;
 
-        private static List<Response> responseDefinitions = new List<Response>();
+        private static List<HL7Lib.ServiceData.Message> responseDefinitions = new List<HL7Lib.ServiceData.Message>();
 
         private static HL7Handler handler = new HL7Handler();
 
@@ -32,23 +34,34 @@ namespace ThortonSOAClient
         private string OurTeamName = "";
         private string OurTeamId = "";
 
+        private Form origForm;
+
+        private List<ValidationResult> results = new List<ValidationResult>();
     
         public serviceCallerForm()
         {
             InitializeComponent();
         }
 
-        public serviceCallerForm(HL7 message, string teamName, string id)
+        /// <summary>
+        /// validate string for bad chars
+        /// </summary>
+        /// <param name="test">string to check</param>
+        /// <returns></returns>
+        
+
+        public serviceCallerForm(HL7 message, string teamName, string id, Form firstPage)
         {
             InitializeComponent();
             ServiceInformation = message;
             OurTeamName = teamName;
             OurTeamId = id;
+            origForm = firstPage;
         }
 
         private void serviceCaller_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
+            origForm.Show();
         }
 
         private void serviceCallerForm_Load(object sender, EventArgs e)
@@ -73,10 +86,10 @@ namespace ThortonSOAClient
             }
             if (ServiceInformation.segments[x].fields[0] == "RSP")
             {
-                Response r;
+                HL7Lib.ServiceData.Message r;
                 for (; ServiceInformation.segments[x].fields[0] == "RSP"; x++)
                 {
-                    r = new Response(Convert.ToInt32(ServiceInformation.segments[x].fields[1]), ServiceInformation.segments[x].fields[2], ServiceInformation.segments[x].fields[3]);
+                    r = new HL7Lib.ServiceData.Message(Convert.ToInt32(ServiceInformation.segments[x].fields[1]), ServiceInformation.segments[x].fields[2], ServiceInformation.segments[x].fields[3]);
                 }
             }
             ServiceIp = ServiceInformation.segments[x].fields[1];
@@ -101,14 +114,45 @@ namespace ThortonSOAClient
         private void executeBtn_Click(object sender, EventArgs e)
         {
             Service service = new Service(OurTeamName,OurTeamId);
-            Boolean isValid = GetArgumentValuesAndValidateInput(service);
-            if (isValid)
+            if (GetArgumentValuesAndValidateInput(service))
             {
                 service.ServiceName = (serviceNameTB.Text);
                 string cmd = handler.ExecuteServiceMessage(service);
                 string rep = SocketSender.StartClient(cmd, ServiceIp, ServicePort);
                 HL7 returnMsg = handler.HandleResponse(rep);
                 DisplayOutput(returnMsg);
+                ClearErrors();
+            }
+            else
+            {
+                ShowErrors();
+            }
+        }
+
+        private void ClearErrors()
+        {
+            foreach(UiArgument arg in argumentElements)
+            {
+                arg.Err.Clear();
+            }
+        }
+
+        private void ShowErrors()
+        {
+            responseTB.AppendText( "|-----------------------------------------------------|" + Environment.NewLine);
+            responseTB.AppendText( "|                          Errors                              |" + Environment.NewLine);
+            responseTB.AppendText( "|-----------------------------------------------------|" + Environment.NewLine);
+            for (int x = 0; x < results.Count;x++ )
+            {
+
+                if (results[x].IsValid)
+                    argumentElements[x].Err.Clear();
+                foreach (ValidationFailure fail in results[x].Errors)
+                {   
+                    
+                    argumentElements[x].Err.SetError(argumentElements[x].Tb, fail.ErrorMessage);
+                    responseTB.AppendText( "The data for the message " + argumentElements[x].Name + " '" + argumentElements[x].Tb.Text + "' was not valid. Error: " + fail.ErrorMessage + Environment.NewLine);
+                }
             }
         }
 
@@ -122,30 +166,48 @@ namespace ThortonSOAClient
             int x = 1;
             if (returnMsg.segments[x].fields[0] == "RSP")
             {
-                responseTB.Text += "|-----------------------------------------------------|" + Environment.NewLine;
-                responseTB.Text += "|                    Response                            |" + Environment.NewLine;
-                responseTB.Text += "|-----------------------------------------------------|" + Environment.NewLine;
+                responseTB.AppendText( "|-----------------------------------------------------|" + Environment.NewLine);
+                responseTB.AppendText( "|                    Response                            |" + Environment.NewLine);
+                responseTB.AppendText( "|-----------------------------------------------------|" + Environment.NewLine);
                 for (; x < numResponses + 1; x++)
                 {
-                    responseTB.Text += "RSP " + x + Environment.NewLine;
-                    responseTB.Text += " Return Field: " + returnMsg.segments[x].fields[2] + Environment.NewLine;
-                    responseTB.Text += " Return Value: " + returnMsg.segments[x].fields[4] + Environment.NewLine + Environment.NewLine;
+                    responseTB.AppendText( "RSP " + x + Environment.NewLine);
+                    responseTB.AppendText( " Return Field: " + returnMsg.segments[x].fields[2] + Environment.NewLine);
+                    responseTB.AppendText( " Return Value: " + returnMsg.segments[x].fields[4] + Environment.NewLine + Environment.NewLine);
                 }
             }
         }
 
         private Boolean GetArgumentValuesAndValidateInput(Service serv)
         {
-            Boolean valid = true;
-            Argument arg;
+            HL7Lib.ServiceData.Message arg;
+            if (!ValidateArgs(argumentElements))
+                return false;
             foreach(UiArgument Argument in argumentElements)
             {
                 string value = Argument.Tb.Text;
-                    //if valid, call method
-                arg = new Argument(Argument.Position, Argument.ArgumentName, Argument.ArgumentDataType, Argument.Mandatory, value);
+                
+                arg = new HL7Lib.ServiceData.Message(Argument.Position, Argument.Name, Argument.DataType, Argument.Mandatory, value);
                 serv.Arguments.Add(arg);
             }
-            return valid;
+            return true;
+        }
+
+        private Boolean ValidateArgs(List<UiArgument> argumentElements)
+        {
+            results.Clear();
+            foreach (UiArgument Argument in argumentElements)
+            {
+                Argument.Value = Argument.Tb.Text;                    
+                results.Add(Argument.Validator.Validate(Argument));
+            }
+
+            foreach(ValidationResult vr in results)
+            {
+                if (!vr.IsValid)
+                    return false;
+            }
+            return true;
         }
     }
 }

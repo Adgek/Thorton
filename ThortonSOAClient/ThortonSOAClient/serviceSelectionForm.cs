@@ -76,7 +76,7 @@ namespace ThortonSOAClient
                     if (fields[1] == "OK")
                     {
                         this.Hide();
-                        serviceCallerForm sc = new serviceCallerForm(returnMsg, service.TeamName, service.TeamID);
+                        serviceCallerForm sc = new serviceCallerForm(returnMsg, service.TeamName, service.TeamID, this);
                         sc.Show();
                     }
                     else

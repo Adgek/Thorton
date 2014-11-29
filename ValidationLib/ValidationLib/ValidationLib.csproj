@@ -56,6 +56,7 @@
     <Compile Include="ShortValidator.cs" />
     <Compile Include="StringValidator.cs" />
     <Compile Include="ValidationUtils.cs" />
+    <Compile Include="ValidatorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

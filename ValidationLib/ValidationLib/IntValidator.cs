@@ -13,11 +13,11 @@ namespace ValidationLib
 
         int Value = 0;
         /// <summary>
-        /// Int validator
         /// </summary>
-        public IntValidator(int Max, int Min)
+        /// Int validator
+        public IntValidator()
         {
-            RuleFor(param => param.Value).Must(BeANumber).WithMessage("This value must be an Integer.");
+            RuleFor(param => param.Value).Must(BeAInt).WithMessage("This value must be an Integer.");
         }
 
         /// <summary>
@@ -25,16 +25,15 @@ namespace ValidationLib
         /// </summary>
         /// <param name="value">the string to check</param>
         /// <returns>true: is a number, false: is not a number</returns>
-        private Boolean BeANumber(string value)
+        private Boolean BeAInt(string value)
         {
             try
             {
                 Value = ValidationUtils.ParseIntFromString(value);
                 return true;
             }
-            catch(Exception e)
-            {
-                
+            catch
+            {                
                 return false;
             }
         }

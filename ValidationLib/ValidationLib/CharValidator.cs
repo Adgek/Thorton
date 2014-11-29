@@ -34,7 +34,7 @@ namespace ValidationLib
                 Value = ValidationUtils.ParseCharFromString(value);
                 return true;
             }
-            catch(Exception e)
+            catch
             {
                 return false;
             }
