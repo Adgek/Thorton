@@ -122,25 +122,29 @@ namespace ThortonSOAService
                     if (ret.Contains("has already published service"))
                     {
                         logger.Log(LogLevel.Error, "The service has already been published");
-                        logger.Log(LogLevel.Error, "\t>> " + HL7Parser.LogSegment(ret));
-                        Console.WriteLine("The service has already been publish. Proceeding.");
+                        response = handler.HandleResponse(ret);
+                        LogUtility.logMessage(response);
+                        Console.WriteLine("The service has already been published. Proceeding.");
                     }
                     else
                     {
                         logger.Log(LogLevel.Error, "Could not publish the service");
-                        logger.Log(LogLevel.Error, "\t>> " + ret);
+                        response = handler.HandleResponse(ret);
+                        LogUtility.logMessage(response);
                         Console.WriteLine("Could not publish the service");
                         return;
                     }                  
-                }
-                
+                }                
             }
             else
             {
                 logger.Log(LogLevel.Error, "Invalid response from registry");
+                response = handler.HandleResponse(ret);
+                LogUtility.logMessage(response);
                 Console.WriteLine("Invalid response from registry");
                 return;
             }
+
             logger.Log(LogLevel.Info, "---\n");
 
             //Start listening for connections

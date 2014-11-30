@@ -184,39 +184,54 @@ namespace ThortonSOAService
                 logger.Log(LogLevel.Info, "---");
                 //read content               
                 HL7Handler hl7h = new HL7Handler();
-                clientData = hl7h.HandleResponse(content);
+                clientData = hl7h.HandleResponse(content);                       
 
                 string isValid = clientData.Validate();
                 if (isValid != "valid")
                 {
-                    Console.WriteLine("Client data is not valid : " + isValid);
+                    Console.WriteLine("Client data is not valid");
 
-                    logger.Log(LogLevel.Error, "Incoming data is not in a readable format : " + isValid);
+                    logger.Log(LogLevel.Error, "Incoming data is not in a readable format" );
                     LogUtility.logMessage(clientData);
 
                     Service errorResponse = new Service();
                     errorResponse.errorCode = "-1";
-                    errorResponse.errorMessage = "Incoming data is not in a readable format : " + isValid;
+                    errorResponse.errorMessage = "Incoming data is not in a readable format";
 
                     message = hl7h.BuildResponseMessage(errorResponse, true);
                     Send(handler, message.fullHL7Message);
                     return;
                 }
-                else if (clientData.segments.Count < 1)
+                else if (clientData.segments.Count < 4)
                 {
-                    Console.WriteLine("No segments to process : " + isValid);
+                    Console.WriteLine("Not enough segments to process");
 
-                    logger.Log(LogLevel.Error, "No segments to process : " + isValid);
+                    logger.Log(LogLevel.Error, "Not enough segments to process");
                     LogUtility.logMessage(clientData);
 
                     Service errorResponse = new Service();
                     errorResponse.errorCode = "-1";
-                    errorResponse.errorMessage = "No segments to process : " + isValid;
+                    errorResponse.errorMessage = "Not enough segments to process";
 
                     message = hl7h.BuildResponseMessage(errorResponse, true);
                     Send(handler, message.fullHL7Message);
                     return;
                 }
+                if (clientData.segments[1].fields[0] != "SRV" && clientData.segments[2].fields[0] != "ARG" && clientData.segments[3].fields[0] != "ARG")
+                {
+                    Console.WriteLine("Incorrect segment types recieved");
+
+                    logger.Log(LogLevel.Error, "Incorrect segment types recieved");
+                    LogUtility.logMessage(clientData);
+
+                    Service errorResponse = new Service();
+                    errorResponse.errorCode = "-1";
+                    errorResponse.errorMessage = "Incorrect segment types recieved";
+
+                    message = hl7h.BuildResponseMessage(errorResponse, true);
+                    Send(handler, message.fullHL7Message);
+                    return;
+                }   
                 
                 //take team info    
                 //query registry           
@@ -236,7 +251,8 @@ namespace ThortonSOAService
                         Console.WriteLine("Could not validate team");
                         
                         logger.Log(LogLevel.Error, "Could not validate team");
-                        logger.Log(LogLevel.Error, "\t>> " + ret);
+                        response = hl7h.HandleResponse(ret);
+                        LogUtility.logMessage(response);
                         
                         Service errorResponse = new Service();
                         errorResponse.errorCode = "-4";
@@ -272,10 +288,10 @@ namespace ThortonSOAService
                         }
                         catch (Exception e)
                         {
-                            logger.Log(LogLevel.Error, "Principal " + p + " is not a valid value");
+                            logger.Log(LogLevel.Error, "Principal " + principle + " is not a valid value");
                             Service errorResponse = new Service();
                             errorResponse.errorCode = "-4";
-                            errorResponse.errorMessage = "Principal " + p + " is not a valid value";
+                            errorResponse.errorMessage = "Principal " + principle + " is not a valid value";
 
                             message = hl7h.BuildResponseMessage(errorResponse, true);
                             Send(handler, message.fullHL7Message);
@@ -306,6 +322,7 @@ namespace ThortonSOAService
 
                         message = hl7h.BuildResponseMessage(purchaseTotalResults);                    
                         Send(handler, message.fullHL7Message);
+                        
                     }   
                 }
                 else
