@@ -196,19 +196,23 @@ namespace ThortonSOAClient
 
         private void DisplayOutput(HL7 returnMsg)
         {
-            //if(returnMsg.)
+            string ErrorMessage = returnMsg.Validate();
+            if(ErrorMessage != "valid")
+            {
+                logger.Log(LogLevel.Fatal, ErrorMessage);
+            }
+            responseTB.AppendText("|-----------------------------------------------------|" + Environment.NewLine);
+            responseTB.AppendText("|                    Response                            |" + Environment.NewLine);
+            responseTB.AppendText("|-----------------------------------------------------|" + Environment.NewLine);
             if (returnMsg.segments[0].fields[0] != "PUB" || returnMsg.segments[0].fields[1] != "OK")
             {
-                // error out
+                responseTB.AppendText("Error " + returnMsg.segments[0].fields[4] + Environment.NewLine + Environment.NewLine);
                 return;
             }
             int numResponses = Convert.ToInt32(returnMsg.segments[0].fields[4]);
             int x = 1;
             if (returnMsg.segments[x].fields[0] == "RSP")
-            {
-                responseTB.AppendText( "|-----------------------------------------------------|" + Environment.NewLine);
-                responseTB.AppendText( "|                    Response                            |" + Environment.NewLine);
-                responseTB.AppendText( "|-----------------------------------------------------|" + Environment.NewLine);
+            {                
                 for (; x < numResponses + 1; x++)
                 {
                     responseTB.AppendText( "RSP " + x + Environment.NewLine);
