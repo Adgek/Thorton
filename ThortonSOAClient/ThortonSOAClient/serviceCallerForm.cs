@@ -196,17 +196,24 @@ namespace ThortonSOAClient
 
         private void DisplayOutput(HL7 returnMsg)
         {
+            if (returnMsg.segments.Count < 1)
+            {
+                responseTB.AppendText("Error: No valid HL7 messages were returned to display." + Environment.NewLine + Environment.NewLine);
+                return;
+            }
             string ErrorMessage = returnMsg.Validate();
             if(ErrorMessage != "valid")
             {
+                responseTB.AppendText("Error: " + ErrorMessage + Environment.NewLine + Environment.NewLine);
                 logger.Log(LogLevel.Fatal, ErrorMessage);
+                return;
             }
             responseTB.AppendText("|-----------------------------------------------------|" + Environment.NewLine);
             responseTB.AppendText("|                    Response                            |" + Environment.NewLine);
             responseTB.AppendText("|-----------------------------------------------------|" + Environment.NewLine);
             if (returnMsg.segments[0].fields[0] != "PUB" || returnMsg.segments[0].fields[1] != "OK")
             {
-                responseTB.AppendText("Error " + returnMsg.segments[0].fields[4] + Environment.NewLine + Environment.NewLine);
+                responseTB.AppendText("Error: " + returnMsg.segments[0].fields[3] + Environment.NewLine + Environment.NewLine);
                 return;
             }
             int numResponses = Convert.ToInt32(returnMsg.segments[0].fields[4]);
