@@ -135,7 +135,7 @@ namespace HL7Lib.HL7
 			return builtHL7; 
 		}
 
-        public static HL7 BuildServiceResponseMessage(Service myService)
+        public static HL7 BuildServiceResponseOkMessage(Service myService)
         {
             HL7 builtHL7 = new HL7();
             int respNum = myService.Responses.Count;
@@ -148,6 +148,18 @@ namespace HL7Lib.HL7
             {
                 BuildRSPSegment(builtHL7, resp.Position.ToString(), resp.Name, resp.DataType, resp.Value);
             }
+
+            FinalizeHL7Protocol(builtHL7);
+            return builtHL7; 
+            
+        }
+
+        public static HL7 BuildServiceResponseNotOkMessage(Service myService)
+        {
+            HL7 builtHL7 = new HL7();
+
+            //create PUB
+            BuildPUBSegment(builtHL7, "OK", errCode: myService.errorCode, errMessage: myService.errorMessage;
 
             FinalizeHL7Protocol(builtHL7);
             return builtHL7; 
