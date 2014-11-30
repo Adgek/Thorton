@@ -65,10 +65,27 @@ namespace ThortonSOAClient
 
                     returnMsg = handler.HandleResponse(SocketSender.StartClient(messageToSend.fullHL7Message, registryIP, registryPort));
                     LogSendSOARegistryCallEnd(returnMsg);
+                    string ErrorMessage = returnMsg.Validate();
+                    if (ErrorMessage != "valid")
+                    {
+                        MessageBox.Show("DATA NOT VALID!! Error: " + ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        logger.Log(LogLevel.Fatal, ErrorMessage);
+                        return;
+                    }
+                    
                 }
                 catch(Exception ex)
                 {
-                    throw new NotImplementedException(ex.Message);
+                    MessageBox.Show("DATA NOT VALID!! Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    logger.Log(LogLevel.Fatal, ex.Message);
+                    return;
+                }
+                string ErrorMessage2 = returnMsg.Validate();
+                if (ErrorMessage2 != "valid")
+                {
+                    MessageBox.Show("DATA NOT VALID!! Error: " + ErrorMessage2, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    logger.Log(LogLevel.Fatal, ErrorMessage2);
+                    return;
                 }
                 List<string> fields = returnMsg.segments.FirstOrDefault().fields;
                 if (fields[1] == "OK")
