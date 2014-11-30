@@ -34,8 +34,8 @@ namespace HL7Lib.HL7
 			//poplulate segments list
 			foreach (string segment in parsedSegments)
 			{
-				HL7Segment newSegment = new HL7Segment(segment);
-				segments.Add(newSegment);
+				//HL7Segment newSegment = new HL7Segment(segment); TODO
+				//segments.Add(newSegment);
 			}
 		}
 

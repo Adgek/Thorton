@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HL7\Definitions.cs" />
     <Compile Include="HL7\HL7.cs" />
     <Compile Include="HL7\HL7Builder.cs" />
     <Compile Include="HL7\HL7Handler.cs" />
