@@ -30,11 +30,47 @@ namespace HL7Lib.HL7
 			fullHL7Message = message;
 
 			List<string> parsedSegments = HL7Parser.GetSegmentsFromMessage(fullHL7Message);
-			
+
+            int numFields = 0;
+
 			//poplulate segments list
 			foreach (string segment in parsedSegments)
 			{
-				HL7Segment newSegment = new HL7Segment(segment, 2); 
+                string segType = segment.Substring(0, 3);
+                if (segType.Contains("SOA"))
+                {
+                    numFields = Definitions.SOA_NUM_FIELDS;
+                }
+                else if (segType.Contains("DRC"))
+                {
+                    numFields = Definitions.DRC_NUM_FIELDS;
+                }
+                else if (segType.Contains("INF"))
+                {
+                    numFields = Definitions.INF_NUM_FIELDS;
+                }
+                else if (segType.Contains("SRV"))
+                {
+                    numFields = Definitions.SRV_NUM_FIELDS;
+                }
+                else if (segType.Contains("ARG"))
+                {
+                    numFields = Definitions.ARG_NUM_FIELDS;
+                }
+                else if (segType.Contains("RSP"))
+                {
+                    numFields = Definitions.RSP_NUM_FIELDS;
+                }
+                else if (segType.Contains("MCH"))
+                {
+                    numFields = Definitions.MCH_NUM_FIELDS;
+                }
+                else if (segType.Contains("PUB"))
+                {
+                    numFields = Definitions.PUB_NUM_FIELDS;
+                }
+
+				HL7Segment newSegment = new HL7Segment(segment, numFields); 
 				segments.Add(newSegment);
 			}
 		}
