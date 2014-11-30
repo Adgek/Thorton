@@ -162,6 +162,7 @@ namespace ThortonSOAService
         public void ReadCallback(IAsyncResult ar)
         {
             logger.Log(LogLevel.Info, "Receiving service request :\n");
+            HL7 clientData;
 
             String content = String.Empty;
 
@@ -183,28 +184,66 @@ namespace ThortonSOAService
                 logger.Log(LogLevel.Info, "---");
                 //read content               
                 HL7Handler hl7h = new HL7Handler();
-                response = hl7h.HandleResponse(content);
+                clientData = hl7h.HandleResponse(content);
 
+                string isValid = clientData.Validate();
+                if (isValid != "valid")
+                {
+                    Console.WriteLine("Client data is not valid : " + isValid);
+
+                    logger.Log(LogLevel.Error, "Incoming data is not in a readable format : " + isValid);
+                    LogUtility.logMessage(clientData);
+
+                    Service errorResponse = new Service();
+                    errorResponse.errorCode = "-1";
+                    errorResponse.errorMessage = "Incoming data is not in a readable format : " + isValid;
+
+                    message = hl7h.BuildResponseMessage(errorResponse, true);
+                    Send(handler, message.fullHL7Message);
+                    return;
+                }
+                else if (clientData.segments.Count < 1)
+                {
+                    Console.WriteLine("No segments to process : " + isValid);
+
+                    logger.Log(LogLevel.Error, "No segments to process : " + isValid);
+                    LogUtility.logMessage(clientData);
+
+                    Service errorResponse = new Service();
+                    errorResponse.errorCode = "-1";
+                    errorResponse.errorMessage = "No segments to process : " + isValid;
+
+                    message = hl7h.BuildResponseMessage(errorResponse, true);
+                    Send(handler, message.fullHL7Message);
+                    return;
+                }
+                
                 //take team info    
                 //query registry           
                 Service service = new Service(TEAM_NAME, TEAM_ID);
-                Service teamService = new Service(response.segments[0].fields[2], response.segments[0].fields[3]);
+                Service teamService = new Service(clientData.segments[0].fields[2], clientData.segments[0].fields[3]);
                 teamService.Tag = ConfigurationManager.AppSettings["TagName"];
-
-                //string command = hl7h.QueryTeamMessage(service, teamService);
-
+                              
                 message = hl7h.QueryTeamMessage(service, teamService);
 
                 string ret = SocketSender.StartClient(message.fullHL7Message, RegistryIp, RegistryPort);
-                response = hl7h.HandleResponse(content);
+                response = hl7h.HandleResponse(ret);
 
                 if (ret.Contains("SOA"))
                 {                    
                     if (response.segments[0].fields[1] != "OK")
                     {
+                        Console.WriteLine("Could not validate team");
+                        
                         logger.Log(LogLevel.Error, "Could not validate team");
                         logger.Log(LogLevel.Error, "\t>> " + ret);
-                        Console.WriteLine("Could not validate team");
+                        
+                        Service errorResponse = new Service();
+                        errorResponse.errorCode = "-4";
+                        errorResponse.errorMessage = "Could not validate team";
+
+                        message = hl7h.BuildResponseMessage(errorResponse, true);
+                        Send(handler, message.fullHL7Message);                        
                         return;
                     }
                     else
@@ -213,18 +252,19 @@ namespace ThortonSOAService
                         string province;
                         string principle;
 
-                        if (response.segments[2].fields[1] == "1")
+                        if (clientData.segments[2].fields[1] == "1")
                         {
-                            province = response.segments[2].fields[5];
-                            principle = response.segments[3].fields[5];
+                            province = clientData.segments[2].fields[5];
+                            principle = clientData.segments[3].fields[5];
                         }
                         else
                         {
-                            province = response.segments[3].fields[5];
-                            principle = response.segments[2].fields[5];
+                            province = clientData.segments[3].fields[5];
+                            principle = clientData.segments[2].fields[5];
                         }
 
-                        province = province.ToUpper();
+                        string testProvince = province;
+                        province = province.ToUpper();                        
 
                         double p = 0;
                         try {
@@ -245,15 +285,16 @@ namespace ThortonSOAService
                         PurchaseTotaller pt = new PurchaseTotaller(province, p);
                         if (pt.province == -1)
                         {
-                            logger.Log(LogLevel.Error, "Province " + province + " could not be found");
+                            logger.Log(LogLevel.Error, "Province " + testProvince + " could not be found");
                             Service errorResponse = new Service();
                             errorResponse.errorCode = "-4";
-                            errorResponse.errorMessage = "Province " + province + "is not valid";
+                            errorResponse.errorMessage = "Province " + testProvince + " is not valid";
 
                             HL7 errorhl7 = hl7h.BuildResponseMessage(errorResponse, true);
                             Send(handler, errorhl7.fullHL7Message);
                             return;
                         }
+
                         pt.AddResult(1, pt.responses[0].Name, pt.responses[0].DataType, pt.principal);
                         pt.AddResult(2, pt.responses[1].Name, pt.responses[1].DataType, pt.GetPST());
                         pt.AddResult(3, pt.responses[2].Name, pt.responses[2].DataType, pt.GetHST());
