@@ -41,8 +41,7 @@ namespace ThortonSOAClient
             {
                 serviceSelectCB.Items.Add(name);
             }
-            logger.Log(LogLevel.Info, "The program has started!");
-            
+            logger.Log(LogLevel.Info, "The program has started!");            
         }
 
         private void executeBtn_Click(object sender, EventArgs e)
@@ -58,8 +57,7 @@ namespace ThortonSOAClient
                 HL7 returnMsg;
                 try
                 {
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.RegisterTeamMessage(service), registryIP, registryPort));
-                   
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.RegisterTeamMessage(service), registryIP, registryPort));                   
                 }
                 catch(Exception ex)
                 {
