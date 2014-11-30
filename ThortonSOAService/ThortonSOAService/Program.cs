@@ -118,11 +118,13 @@ namespace ThortonSOAService
                     if (ret.Contains("has already published service"))
                     {
                         logger.Log(LogLevel.Error, "The service has already been published");
+                        logger.Log(LogLevel.Error, "\t>> " + ret);
                         Console.WriteLine("The service has already been publish. Proceeding.");
                     }
                     else
                     {
                         logger.Log(LogLevel.Error, "Could not publish the service");
+                        logger.Log(LogLevel.Error, "\t>> " + ret);
                         Console.WriteLine("Could not publish the service");
                         return;
                     }                  
