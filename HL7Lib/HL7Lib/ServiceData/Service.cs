@@ -15,6 +15,8 @@ namespace HL7Lib.ServiceData
         public string Tag;
         public int SecurityLevel;
         public string Description;
+        public string errorCode;
+        public string errorMessage;
 
         public List<Message> Arguments;
         public List<Message> Responses;
