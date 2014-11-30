@@ -159,7 +159,7 @@ namespace HL7Lib.HL7
             HL7 builtHL7 = new HL7();
 
             //create PUB
-            BuildPUBSegment(builtHL7, "OK", errCode: myService.errorCode, errMessage: myService.errorMessage;
+            BuildPUBSegment(builtHL7, "NOT-OK", errCode: myService.errorCode, errMessage: myService.errorMessage);
 
             FinalizeHL7Protocol(builtHL7);
             return builtHL7; 

@@ -77,10 +77,17 @@ namespace HL7Lib.HL7
 			return myRecord;
 		}
 
-        public HL7 BuildResponseMessage(Service myService)
+        public HL7 BuildResponseMessage(Service myService, bool notOkMessage = false)
         {
-            HL7 myRecord = HL7Builder.BuildServiceResponseMessage(myService);
-
+            HL7 myRecord;
+            if (notOkMessage)
+            {
+                myRecord = HL7Builder.BuildServiceResponseNotOkMessage(myService);
+            }
+            else
+            {
+                myRecord = HL7Builder.BuildServiceResponseOkMessage(myService);
+            }
             return myRecord;
         }
 	}

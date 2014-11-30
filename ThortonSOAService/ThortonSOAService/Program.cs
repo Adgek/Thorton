@@ -17,11 +17,9 @@ namespace ThortonSOAService
     class Program
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        
+
         static void Main(string[] args)
         {
-            HL7Handler handler = new HL7Handler();
-
             string SERVICE_NAME = ConfigurationManager.AppSettings["ServiceName"];
             string SERVICE_IP = ConfigurationManager.AppSettings["ServiceIP"];
             string SERVICE_PORT = ConfigurationManager.AppSettings["ServicePort"];
@@ -30,7 +28,17 @@ namespace ThortonSOAService
             string TEAM_NAME = ConfigurationManager.AppSettings["TeamName"];
             string TAG_NAME = ConfigurationManager.AppSettings["TagName"];
 
+            HL7Handler handler = new HL7Handler();
+            string TEAM_ID = "";
+
+            HL7 message;
+            HL7 response;
+
+            string ret = "";
+
             int Port = 0;
+            int RegistryPort = 0; 
+
             try 
             {
                 int.TryParse(SERVICE_PORT, out Port);
@@ -39,9 +47,8 @@ namespace ThortonSOAService
                 logger.Log(LogLevel.Error, "Invalid service port read from config file: " + e.Message);
                 Console.WriteLine("Invalid service port read from config file. Exiting.");
                 return;
-            }            
-            
-            int RegistryPort = 0;            
+            }           
+
             try
             {
                 int.TryParse(REGISTRY_PORT, out RegistryPort);
@@ -51,12 +58,7 @@ namespace ThortonSOAService
                 logger.Log(LogLevel.Error, "Invalid registry port read from config file: " + e.Message);
                 Console.WriteLine("Invalid registry port read from config file. Exiting.");
                 return;
-            }
-
-            string TEAM_ID = "";
-
-            string command = "";
-            string ret = "";
+            }            
 
             //Service Start
             logger.Log(LogLevel.Info, "==================================================================\n");
@@ -70,23 +72,25 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             Service register = new Service();
             register.TeamName = TEAM_NAME;
-            command = handler.RegisterTeamMessage(register);
-            logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(command) + "\n");
-            ret = SocketSender.StartClient(command, REGISTRY_IP, RegistryPort);
-            logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
-            logger.Log(LogLevel.Info, "\t\t>> " + HL7Parser.LogSegment(ret) + "\n");
 
+            message = handler.RegisterTeamMessage(register);
+            LogUtility.logMessage(message);
+
+            ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+            response = handler.HandleResponse(ret);
+
+            logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
+            LogUtility.logMessage(response);      
+                       
             if (ret.Contains("SOA"))
             {
-                HL7 hl7 = handler.HandleResponse(ret);
-
-                if (hl7.segments[0].fields[1] != "OK")
+                if (response.segments[0].fields[1] != "OK")
                 {
                     logger.Log(LogLevel.Error, "Could not register the team");
                     Console.WriteLine("Could not register the team");
                     return;
                 }
-                TEAM_ID = hl7.segments[0].fields[2];
+                TEAM_ID = response.segments[0].fields[2];
             }
             else
             {
@@ -98,22 +102,22 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "---\n");
 
             //Publish service
-            PurchaseTotaller pt = new PurchaseTotaller();
-            //IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            PurchaseTotaller pt = new PurchaseTotaller();          
             IPAddress ipAddress = IPAddress.Parse(SERVICE_IP);
             Service service = new Service(SERVICE_NAME, TEAM_NAME, TEAM_ID, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, Port);
 
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
-            command = handler.PublishServiceMessage(service);
-            logger.Log(LogLevel.Info, "\t>> " + HL7Parser.LogSegment(command) + "\n");
-            ret = SocketSender.StartClient(command, REGISTRY_IP, RegistryPort);
+            message = handler.PublishServiceMessage(service);
+            LogUtility.logMessage(message);
+           
+            ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+            response = handler.HandleResponse(ret);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
-            logger.Log(LogLevel.Info, "\t\t>> " + HL7Parser.LogSegment(ret) + "\n");
+            LogUtility.logMessage(response);
 
             if (ret.Contains("SOA"))
             {
-                HL7 hl7 = handler.HandleResponse(ret);
-                if (hl7.segments[0].fields[1] != "OK")
+                if (response.segments[0].fields[1] != "OK")
                 {
                     if (ret.Contains("has already published service"))
                     {
