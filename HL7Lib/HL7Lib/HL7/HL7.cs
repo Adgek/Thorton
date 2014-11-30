@@ -23,6 +23,23 @@ namespace HL7Lib.HL7
 		{
 			segments = new List<HL7Segment>();
 		}
+
+        public string Validate()
+        {
+            string returnVal = "The following segments do not match the HL7 protocol: " + Environment.NewLine;
+            Boolean isValid = true;
+            foreach(HL7Segment seg in segments)
+            {
+                if(!seg.isValid)
+                {
+                    isValid = false;
+                    returnVal += seg.segment + Environment.NewLine;
+                }
+            }
+            if (isValid)
+                return "valid";
+            return returnVal;
+        }
 		
 		//Constructor takes an HL7 string for responses
 		public HL7(string message):this()

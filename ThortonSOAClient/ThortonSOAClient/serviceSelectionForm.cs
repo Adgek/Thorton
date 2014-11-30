@@ -41,7 +41,10 @@ namespace ThortonSOAClient
             {
                 serviceSelectCB.Items.Add(name);
             }
-            logger.Log(LogLevel.Info, "The program has started!");            
+            logger.Log(LogLevel.Info, "=======================================================");
+            logger.Log(LogLevel.Info, "                -- USER APP LOG --");
+            logger.Log(LogLevel.Info, "Team : " + TeamName + " (Kyle F, Adrian K, Matthew A)"); 
+            logger.Log(LogLevel.Info, "======================================================="); 
         }
 
         private void executeBtn_Click(object sender, EventArgs e)
@@ -57,7 +60,11 @@ namespace ThortonSOAClient
                 HL7 returnMsg;
                 try
                 {
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.RegisterTeamMessage(service), registryIP, registryPort));                   
+                    HL7 messageToSend = handler.RegisterTeamMessage(service);
+                    LogSendSOARegistryCallStart(messageToSend);
+
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(messageToSend.fullHL7Message, registryIP, registryPort));
+                    LogSendSOARegistryCallEnd(returnMsg);
                 }
                 catch(Exception ex)
                 {
@@ -68,7 +75,11 @@ namespace ThortonSOAClient
                 {                    
                     service.TeamID = fields[2];
                     service.Tag = methods[serviceSelectCB.SelectedIndex];
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(handler.QueryServiceMessage(service), registryIP, registryPort));
+
+                    HL7 messageToSend = handler.QueryServiceMessage(service);
+                    LogSendSOARegistryCallStart(messageToSend);
+                    returnMsg = handler.HandleResponse(SocketSender.StartClient(messageToSend.fullHL7Message, registryIP, registryPort));
+                    LogSendSOARegistryCallEnd(returnMsg);
                     fields = returnMsg.segments.FirstOrDefault().fields;
 
                     if (fields[1] == "OK")
@@ -79,14 +90,35 @@ namespace ThortonSOAClient
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        MessageBox.Show("DATA NOT VALID!! Could not query a valid service.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     } 
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    MessageBox.Show("DATA NOT VALID!! Could not find a team registered under the name: " + TeamName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }                
             }            
+        }
+
+        private static void LogSendSOARegistryCallEnd(HL7 returnMsg)
+        {
+            logger.Log(LogLevel.Info, "\t >> Response from SOA-Registry :");
+            foreach (HL7Segment seg in returnMsg.segments)
+            {
+                logger.Log(LogLevel.Info, "\t\t >> " + seg.segment);
+            }
+            
+            logger.Log(LogLevel.Info, "---");
+        }
+
+        private static void LogSendSOARegistryCallStart(HL7 messageToSend)
+        {
+            logger.Log(LogLevel.Info, "---");
+            logger.Log(LogLevel.Info, "Calling SOA-Registry with message :");
+            foreach (HL7Segment seg in messageToSend.segments)
+            {
+                logger.Log(LogLevel.Info, "\t >> " + seg.segment);
+            }
         }
     }
 }
