@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using HL7Lib.HL7;
 using HL7Lib.ServiceData;
+using NLog;
 using SocketClass;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace ThortonSOAClient
 {
     public partial class serviceCallerForm : Form
     {
+
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         private static List<UiArgument> argumentElements = new List<UiArgument>();
 
         private HL7 ServiceInformation = new HL7();
@@ -76,6 +79,7 @@ namespace ThortonSOAClient
             serviceDescTB.Text = ServiceInformation.segments[1].fields[6];
             int x = 2;
             List<List<string>> argInfo = new List<List<string>>();
+
             if (ServiceInformation.segments[x].fields[0] == "ARG")
             {
                 for (; ServiceInformation.segments[x].fields[0] == "ARG"; x++)
@@ -117,9 +121,22 @@ namespace ThortonSOAClient
             if (GetArgumentValuesAndValidateInput(service))
             {
                 service.ServiceName = (serviceNameTB.Text);
-                string cmd = handler.ExecuteServiceMessage(service);
-                string rep = SocketSender.StartClient(cmd, ServiceIp, ServicePort);
+                HL7 cmd = handler.ExecuteServiceMessage(service);
+                LogSendServiceCall(cmd);
+                logger.Log(LogLevel.Info, "---");
+                logger.Log(LogLevel.Info, "Sending service request to IP " + ServiceIp + ", PORT " +ServicePort +" :");
+                string rep = "";
+                try
+                {
+                    rep = SocketSender.StartClient(cmd.fullHL7Message, ServiceIp, ServicePort);
+                }
+                catch(Exception ex)
+                {
+                    logger.Log(LogLevel.Fatal,ex.Message);
+                    return;
+                }
                 HL7 returnMsg = handler.HandleResponse(rep);
+                LogSendServiceCallEnd(returnMsg);
                 DisplayOutput(returnMsg);
                 ClearErrors();
             }
@@ -127,6 +144,27 @@ namespace ThortonSOAClient
             {
                 ShowErrors();
             }
+        }
+
+        private static void LogSendServiceCall(HL7 msg)
+        {
+            foreach (HL7Segment seg in msg.segments)
+            {
+                logger.Log(LogLevel.Info, "\t >> " + seg.segment);
+            }
+
+            logger.Log(LogLevel.Info, "---");
+        }
+
+        private static void LogSendServiceCallEnd(HL7 returnMsg)
+        {
+            logger.Log(LogLevel.Info, "\t >> Response from Published Service :");
+            foreach (HL7Segment seg in returnMsg.segments)
+            {
+                logger.Log(LogLevel.Info, "\t\t >> " + seg.segment);
+            }
+
+            logger.Log(LogLevel.Info, "---");
         }
 
         private void ClearErrors()
@@ -158,9 +196,11 @@ namespace ThortonSOAClient
 
         private void DisplayOutput(HL7 returnMsg)
         {
+            //if(returnMsg.)
             if (returnMsg.segments[0].fields[0] != "PUB" || returnMsg.segments[0].fields[1] != "OK")
             {
                 // error out
+                return;
             }
             int numResponses = Convert.ToInt32(returnMsg.segments[0].fields[4]);
             int x = 1;
