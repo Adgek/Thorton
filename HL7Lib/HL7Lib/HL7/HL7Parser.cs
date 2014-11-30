@@ -45,7 +45,7 @@ namespace HL7Lib.HL7
             
             message = message.Replace(msgBeg.ToString(), "");
             message = message.Replace(msgEnd.ToString() + segEnd.ToString(), "");
-            message = message.Replace(segEnd.ToString(), "\n");
+            message = message.Replace(segEnd.ToString(), "--");
 
             return message;
         }
