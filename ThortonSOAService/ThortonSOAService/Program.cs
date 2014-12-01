@@ -183,9 +183,11 @@ namespace ThortonSOAService
             //Start listening for connections
             SocketListener sl = new SocketListener();
             Thread listener = new Thread(new System.Threading.ThreadStart(sl.StartListening));
+            Thread bazinga = new Thread(new System.Threading.ThreadStart(sl.StopTheRegistryFromTrolling));
             try
             {
                 listener.Start();
+                bazinga.Start();
             }
             catch (Exception e)
             {
