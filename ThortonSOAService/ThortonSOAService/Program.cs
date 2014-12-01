@@ -37,17 +37,18 @@ namespace ThortonSOAService
             string ret = "";
 
             int Port = 0;
-            int RegistryPort = 0; 
+            int RegistryPort = 0;
 
-            try 
+            try
             {
                 int.TryParse(SERVICE_PORT, out Port);
             }
-            catch(Exception e){
+            catch (Exception e)
+            {
                 logger.Log(LogLevel.Error, "Invalid service port read from config file: " + e.Message);
                 Console.WriteLine("Invalid service port read from config file. Exiting.");
                 return;
-            }           
+            }
 
             try
             {
@@ -58,7 +59,7 @@ namespace ThortonSOAService
                 logger.Log(LogLevel.Error, "Invalid registry port read from config file: " + e.Message);
                 Console.WriteLine("Invalid registry port read from config file. Exiting.");
                 return;
-            }            
+            }
 
             //Service Start
             logger.Log(LogLevel.Info, "==================================================================\n");
@@ -66,8 +67,8 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "Tag-Name : " + TAG_NAME + "\n");
             logger.Log(LogLevel.Info, "Service\t: " + SERVICE_NAME + "\n");
             logger.Log(LogLevel.Info, "==================================================================\n");
-            logger.Log(LogLevel.Info, "---\n");                   
-         
+            logger.Log(LogLevel.Info, "---\n");
+
             //Register team
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             Service register = new Service();
@@ -76,12 +77,22 @@ namespace ThortonSOAService
             message = handler.RegisterTeamMessage(register);
             LogUtility.logMessage(message);
 
-            ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+            try
+            {
+                ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Could not open socket to the regisry : " + e.Message);
+                Console.WriteLine("Could not open socket to the regisry : " + e.Message);
+                return;
+            }
+
             response = handler.HandleResponse(ret);
 
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
-            LogUtility.logMessage(response);      
-                       
+            LogUtility.logMessage(response);
+
             if (ret.Contains("SOA"))
             {
                 if (response.segments[0].fields[1] != "OK")
@@ -102,15 +113,25 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "---\n");
 
             //Publish service
-            PurchaseTotaller pt = new PurchaseTotaller();          
+            PurchaseTotaller pt = new PurchaseTotaller();
             IPAddress ipAddress = IPAddress.Parse(SERVICE_IP);
             Service service = new Service(SERVICE_NAME, TEAM_NAME, TEAM_ID, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, Port);
 
             logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
             message = handler.PublishServiceMessage(service);
             LogUtility.logMessage(message);
-           
-            ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+
+            try
+            {
+                ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Could not open socket to the regisry : " + e.Message);
+                Console.WriteLine("Could not open socket to the regisry : " + e.Message);
+                return;
+            }
+
             response = handler.HandleResponse(ret);
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
             LogUtility.logMessage(response);
@@ -133,8 +154,8 @@ namespace ThortonSOAService
                         LogUtility.logMessage(response);
                         Console.WriteLine("Could not publish the service");
                         return;
-                    }                  
-                }                
+                    }
+                }
             }
             else
             {
@@ -152,13 +173,14 @@ namespace ThortonSOAService
             Thread listener = new Thread(new System.Threading.ThreadStart(sl.StartListening));
             try
             {
-                listener.Start(); 
+                listener.Start();
             }
-            catch(Exception e){
+            catch (Exception e)
+            {
                 logger.Log(LogLevel.Error, "Service failed starting: " + e.Message);
                 Console.WriteLine("Service failed starting");
                 return;
             }
-        }       
+        }
     }
 }

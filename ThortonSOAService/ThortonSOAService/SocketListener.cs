@@ -63,8 +63,19 @@ namespace ThortonSOAService
                         
             message = hl7h.RegisterTeamMessage(team);
             LogUtility.logMessage(message);
+            string ret = "";
 
-            string ret = SocketSender.StartClient(message.fullHL7Message, RegistryIp, RegistryPort);
+            try
+            {
+                ret = SocketSender.StartClient(message.fullHL7Message, RegistryIp, RegistryPort);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Could not open socket to the regisry : " + e.Message);
+                Console.WriteLine("Could not open socket to the regisry : " + e.Message);
+                return;
+            }
+           
             response = hl7h.HandleResponse(ret);
 
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
@@ -240,8 +251,18 @@ namespace ThortonSOAService
                 teamService.Tag = ConfigurationManager.AppSettings["TagName"];
                               
                 message = hl7h.QueryTeamMessage(service, teamService);
+                string ret = "";
+                try
+                {
+                    ret = SocketSender.StartClient(message.fullHL7Message, RegistryIp, RegistryPort);
+                }
+                catch (Exception e)
+                {
+                    logger.Log(LogLevel.Error, "Could not open socket to the regisry : " + e.Message);
+                    Console.WriteLine("Could not open socket to the regisry : " + e.Message);
+                    return;
+                }
 
-                string ret = SocketSender.StartClient(message.fullHL7Message, RegistryIp, RegistryPort);
                 response = hl7h.HandleResponse(ret);
 
                 if (ret.Contains("SOA"))
