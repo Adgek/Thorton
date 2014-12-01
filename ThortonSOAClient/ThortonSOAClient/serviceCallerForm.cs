@@ -2,10 +2,12 @@
 using HL7Lib.HL7;
 using HL7Lib.ServiceData;
 using NLog;
+using RegistryHandlerLib;
 using SocketClass;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -37,7 +39,77 @@ namespace ThortonSOAClient
         private string OurTeamName = "";
         private string OurTeamId = "";
 
+        private static string registryIP = ConfigurationManager.AppSettings["registryipaddress"];
+        private static int registryPort = Convert.ToInt32(ConfigurationManager.AppSettings["registryport"]);
+
         private Form origForm;
+
+        private void RegisterTeam()
+        {
+
+
+            Service  service = new Service();
+            service.TeamName = OurTeamName;
+            HL7 returnMsg;
+            try
+            {
+                LogSendSOARegistryCallStart(handler.RegisterTeamMessage(service));
+                returnMsg = RegistryCommunicator.RegisterTeam(service, registryPort, registryIP);
+                LogSendSOARegistryCallEnd(returnMsg);
+                string ErrorMessage = returnMsg.Validate();
+                if (ErrorMessage != "valid")
+                {
+                    MessageBox.Show("DATA NOT VALID!! Error: " + ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    logger.Log(LogLevel.Fatal, ErrorMessage);
+                    return;
+                }
+                    
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("DATA NOT VALID!! Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                logger.Log(LogLevel.Fatal, ex.Message);
+                return;
+            }
+            string ErrorMessage2 = returnMsg.Validate();
+            if (ErrorMessage2 != "valid")
+            {
+                MessageBox.Show("DATA NOT VALID!! Error: " + ErrorMessage2, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                logger.Log(LogLevel.Fatal, ErrorMessage2);
+                return;
+            }
+            List<string> fields = returnMsg.segments.FirstOrDefault().fields;
+            if (fields[1] == "OK")
+            {
+                OurTeamId = fields[2];
+            }
+            else
+            {
+                MessageBox.Show("DATA NOT VALID!! Could not find a team registered under the name: " + OurTeamName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                logger.Log(LogLevel.Fatal, "DATA NOT VALID!! Could not find a team registered under the name: " + OurTeamName);
+            }  
+        }
+
+        private static void LogSendSOARegistryCallEnd(HL7 returnMsg)
+        {
+            logger.Log(LogLevel.Info, "\t >> Response from SOA-Registry :");
+            foreach (HL7Segment seg in returnMsg.segments)
+            {
+                logger.Log(LogLevel.Info, "\t\t >> " + seg.segment);
+            }
+
+            logger.Log(LogLevel.Info, "---");
+        }
+
+        private static void LogSendSOARegistryCallStart(HL7 messageToSend)
+        {
+            logger.Log(LogLevel.Info, "---");
+            logger.Log(LogLevel.Info, "Calling SOA-Registry with message :");
+            foreach (HL7Segment seg in messageToSend.segments)
+            {
+                logger.Log(LogLevel.Info, "\t >> " + seg.segment);
+            }
+        }
 
         private List<ValidationResult> results = new List<ValidationResult>();
     
@@ -45,12 +117,6 @@ namespace ThortonSOAClient
         {
             InitializeComponent();
         }
-
-        /// <summary>
-        /// validate string for bad chars
-        /// </summary>
-        /// <param name="test">string to check</param>
-        /// <returns></returns>
         
 
         public serviceCallerForm(HL7 message, string teamName, string id, Form firstPage)
@@ -114,6 +180,9 @@ namespace ThortonSOAClient
                 yLocation += 65;
             }
         }
+        const char BEGIN_MESSAGE = (char)11;
+        const char END_SEGMENT = (char)13;
+        const char END_MESSAGE = (char)28;
 
         private void executeBtn_Click(object sender, EventArgs e)
         {
@@ -122,9 +191,9 @@ namespace ThortonSOAClient
             {
                 service.ServiceName = (serviceNameTB.Text);
                 HL7 cmd = handler.ExecuteServiceMessage(service);
-                LogSendServiceCall(cmd);
                 logger.Log(LogLevel.Info, "---");
                 logger.Log(LogLevel.Info, "Sending service request to IP " + ServiceIp + ", PORT " +ServicePort +" :");
+                LogSendServiceCall(cmd);
                 string rep = "";
                 try
                 {
@@ -213,20 +282,65 @@ namespace ThortonSOAClient
             responseTB.AppendText("|-----------------------------------------------------|" + Environment.NewLine);
             if (returnMsg.segments[0].fields[0] != "PUB" || returnMsg.segments[0].fields[1] != "OK")
             {
-                responseTB.AppendText("Error: " + returnMsg.segments[0].fields[3] + Environment.NewLine + Environment.NewLine);
+                if (returnMsg.segments[0].fields[3] == "")
+                {
+
+                    responseTB.AppendText("Error: Unexpected message was returned from the service and no error was provided." + Environment.NewLine + Environment.NewLine);
+                    logger.Log(LogLevel.Fatal, "Error: Unexpected message was returned from the service and no error was provided.");
+                }
+                else
+                {
+
+                    responseTB.AppendText("Error thrown the service. Message provided was: " + returnMsg.segments[0].fields[3] + Environment.NewLine + Environment.NewLine);
+                    logger.Log(LogLevel.Fatal, "Error thrown the service. Message provided was: " + returnMsg.segments[0].fields[3]);
+                }
                 return;
             }
-            int numResponses = Convert.ToInt32(returnMsg.segments[0].fields[4]);
+
+            int numResponses;
+            try
+            {
+                numResponses = Convert.ToInt32(returnMsg.segments[0].fields[4]);
+            }
+            catch
+            {
+                responseTB.AppendText("Error: Number of responses was not provided. " + Environment.NewLine + Environment.NewLine);
+                logger.Log(LogLevel.Fatal, "Error: Number of responses was not provided. ");
+                
+                return;
+            }
             int x = 1;
+            if (returnMsg.segments.Count -1 < x)
+            {
+                responseTB.AppendText("Error: No response was found to display. " + Environment.NewLine + Environment.NewLine);
+                logger.Log(LogLevel.Fatal, "Error: No response was found to display. ");
+                return;
+            }
             if (returnMsg.segments[x].fields[0] == "RSP")
-            {                
-                for (; x < numResponses + 1; x++)
+            {
+                for (; x < numResponses + 1 && !(x >returnMsg.segments.Count -1); x++)
                 {
-                    responseTB.AppendText( "RSP " + x + Environment.NewLine);
-                    responseTB.AppendText( " Return Field: " + returnMsg.segments[x].fields[2] + Environment.NewLine);
-                    responseTB.AppendText( " Return Value: " + returnMsg.segments[x].fields[4] + Environment.NewLine + Environment.NewLine);
+                    if (returnMsg.segments[x].fields[0] == "RSP")
+                    { 
+                        responseTB.AppendText( "RSP " + x + Environment.NewLine);
+                        responseTB.AppendText( " Return Field: " + returnMsg.segments[x].fields[2] + Environment.NewLine);
+                        responseTB.AppendText( " Return Value: " + returnMsg.segments[x].fields[4] + Environment.NewLine + Environment.NewLine);
+                    }
+                    else
+                    {
+                        logger.Log(LogLevel.Warn, "Error: Found invalid segment before response parsing was complete. Segment:  " + returnMsg.segments[x].segment + Environment.NewLine + Environment.NewLine);
+                        break;
+                    }
                 }
             }
+            else
+            {
+                responseTB.AppendText("Error: No response was found to display. " + Environment.NewLine + Environment.NewLine);
+            }
+            if(returnMsg.segments.Count-1 != numResponses)
+            {
+                logger.Log(LogLevel.Warn, "Error: Service provided less responses than specified. Expected: " + numResponses + " Recieved: " + (returnMsg.segments.Count - 1));
+            }            
         }
 
         private Boolean GetArgumentValuesAndValidateInput(Service serv)

@@ -1,0 +1,9 @@
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\bin\Debug\RegistryHandlerLib.dll
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\bin\Debug\RegistryHandlerLib.pdb
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\bin\Debug\HL7Lib.dll
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\bin\Debug\Socket.dll
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\bin\Debug\HL7Lib.pdb
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\bin\Debug\Socket.pdb
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\obj\Debug\RegistryHandlerLib.csprojResolveAssemblyReference.cache
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\obj\Debug\RegistryHandlerLib.dll
+E:\Documents\GitHub\Thorton\RegistryHandlerLib\RegistryHandlerLib\obj\Debug\RegistryHandlerLib.pdb

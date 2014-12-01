@@ -12,6 +12,7 @@ using SocketClass;
 using System.Configuration;
 using HL7Lib.HL7;
 using HL7Lib.ServiceData;
+using RegistryHandlerLib;
 
 
 namespace ThortonSOAClient
@@ -60,10 +61,8 @@ namespace ThortonSOAClient
                 HL7 returnMsg;
                 try
                 {
-                    HL7 messageToSend = handler.RegisterTeamMessage(service);
-                    LogSendSOARegistryCallStart(messageToSend);
-
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(messageToSend.fullHL7Message, registryIP, registryPort));
+                    LogSendSOARegistryCallStart(handler.RegisterTeamMessage(service));
+                    returnMsg = RegistryCommunicator.RegisterTeam(service, registryPort, registryIP);
                     LogSendSOARegistryCallEnd(returnMsg);
                     string ErrorMessage = returnMsg.Validate();
                     if (ErrorMessage != "valid")
@@ -93,9 +92,10 @@ namespace ThortonSOAClient
                     service.TeamID = fields[2];
                     service.Tag = methods[serviceSelectCB.SelectedIndex];
 
-                    HL7 messageToSend = handler.QueryServiceMessage(service);
-                    LogSendSOARegistryCallStart(messageToSend);
-                    returnMsg = handler.HandleResponse(SocketSender.StartClient(messageToSend.fullHL7Message, registryIP, registryPort));
+                    LogSendSOARegistryCallStart(handler.QueryServiceMessage(service));
+
+                    returnMsg = RegistryCommunicator.QueryServiceInfo(service, registryPort, registryIP);
+
                     LogSendSOARegistryCallEnd(returnMsg);
                     fields = returnMsg.segments.FirstOrDefault().fields;
 
@@ -108,11 +108,13 @@ namespace ThortonSOAClient
                     else
                     {
                         MessageBox.Show("DATA NOT VALID!! Could not query a valid service.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        logger.Log(LogLevel.Fatal, "DATA NOT VALID!! Could not query a valid service.");
                     } 
                 }
                 else
                 {
                     MessageBox.Show("DATA NOT VALID!! Could not find a team registered under the name: " + TeamName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    logger.Log(LogLevel.Fatal, "DATA NOT VALID!! Could not find a team registered under the name: " + TeamName);
                 }                
             }            
         }
