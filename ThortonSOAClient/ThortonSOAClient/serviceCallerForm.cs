@@ -189,6 +189,7 @@ namespace ThortonSOAClient
             Service service = new Service(OurTeamName,OurTeamId);
             if (GetArgumentValuesAndValidateInput(service))
             {
+                RegisterTeam();
                 service.ServiceName = (serviceNameTB.Text);
                 HL7 cmd = handler.ExecuteServiceMessage(service);
                 logger.Log(LogLevel.Info, "---");
