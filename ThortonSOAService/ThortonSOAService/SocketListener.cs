@@ -4,6 +4,7 @@
 //File: SocketListener.cs
 //Date: 23/11/14
 //Purpose: This file contains the asyncronous service logic which is able to handle multiple clients at the same time.
+// based on a microsoft socket example
 //***********************
 
 using System;
@@ -23,6 +24,9 @@ using HL7Lib.ServiceData;
 
 namespace ThortonSOAService
 {
+    /// <summary>
+    /// listen for client connection and run the purchase totaller
+    /// </summary>
     class SocketListener
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
@@ -42,6 +46,9 @@ namespace ThortonSOAService
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
+        /// <summary>
+        /// constructor
+        /// </summary>
         public SocketListener()
         {
             logger.Log(LogLevel.Info, "Starting to listen for connections\n");
@@ -89,6 +96,7 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
             LogUtility.logMessage(response);   
 
+            //check if team id could be retrieved
             if (ret.Contains("SOA"))
             {
                 if (response.segments[0].fields[1] != "OK")
@@ -124,6 +132,9 @@ namespace ThortonSOAService
             }            
         }
 
+        /// <summary>
+        /// method that actively listens for connections
+        /// </summary>
         public void StartListening()
         {
             // Data buffer for incoming data.
@@ -205,6 +216,8 @@ namespace ThortonSOAService
                 HL7Handler hl7h = new HL7Handler();
                 clientData = hl7h.HandleResponse(content);                       
 
+                //validate all the data the client sends the service
+                //check if segments are correct
                 string isValid = clientData.Validate();
                 if (isValid != "valid")
                 {
@@ -221,7 +234,8 @@ namespace ThortonSOAService
                     Send(handler, message.fullHL7Message);
                     return;
                 }
-                else if (clientData.segments.Count < 4)
+                //check if the required amount of segments are available
+                if (clientData.segments.Count < 4)
                 {
                     Console.WriteLine("Not enough segments to process");
 
@@ -236,6 +250,7 @@ namespace ThortonSOAService
                     Send(handler, message.fullHL7Message);
                     return;
                 }
+                //check if segment types are correct
                 if (clientData.segments[1].fields[0] != "SRV" && clientData.segments[2].fields[0] != "ARG" && clientData.segments[3].fields[0] != "ARG")
                 {
                     Console.WriteLine("Incorrect segment types recieved");
@@ -272,7 +287,7 @@ namespace ThortonSOAService
                 }
 
                 response = hl7h.HandleResponse(ret);
-
+                //check if message was OK
                 if (ret.Contains("SOA"))
                 {                    
                     if (response.segments[0].fields[1] != "OK")
@@ -297,6 +312,7 @@ namespace ThortonSOAService
                         string province;
                         string principle;
 
+                        //put the variables in the right spot based on the arg position passed in from client
                         if (clientData.segments[2].fields[1] == "1")
                         {
                             province = clientData.segments[2].fields[5];
@@ -308,6 +324,7 @@ namespace ThortonSOAService
                             principle = clientData.segments[2].fields[5];
                         }
 
+                        //validate the province and prinicple values
                         string testProvince = province;
                         province = province.ToUpper();                        
 
@@ -340,6 +357,7 @@ namespace ThortonSOAService
                             return;
                         }
 
+                        //add the results of each calculation to a list of result
                         pt.AddResult(1, pt.responses[0].Name, pt.responses[0].DataType, pt.principal);
                         pt.AddResult(2, pt.responses[1].Name, pt.responses[1].DataType, pt.GetPST());
                         pt.AddResult(3, pt.responses[2].Name, pt.responses[2].DataType, pt.GetHST());
@@ -349,6 +367,7 @@ namespace ThortonSOAService
                         Service purchaseTotalResults = new Service();
                         purchaseTotalResults.Responses = pt.results;
 
+                        //create an hl7 response with the data and send it to the client
                         message = hl7h.BuildResponseMessage(purchaseTotalResults);                    
                         Send(handler, message.fullHL7Message);
                         
@@ -363,6 +382,11 @@ namespace ThortonSOAService
             }
         }
 
+        /// <summary>
+        /// send data to socket
+        /// </summary>
+        /// <param name="handler">socket to send to</param>
+        /// <param name="data">data to send</param>
         private void Send(Socket handler, String data)
         {
             logger.Log(LogLevel.Info, "Responding to service request :\n");
@@ -397,6 +421,9 @@ namespace ThortonSOAService
             }
         }
 
+        /// <summary>
+        /// method that trys to re register and publish the team and service every one second
+        /// </summary>
         public void StopTheRegistryFromTrolling()
         {
             string REGISTRY_IP = ConfigurationManager.AppSettings["RegistryIP"];
@@ -480,12 +507,7 @@ namespace ThortonSOAService
 
             }
         }
-
-
-
-    }
-
-   
+    }   
 
     // State object for reading client data asynchronously
     public class StateObject

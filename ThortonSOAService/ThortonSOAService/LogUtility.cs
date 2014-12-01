@@ -17,10 +17,17 @@ using NLog;
 
 namespace ThortonSOAService
 {
+    /// <summary>
+    /// logs segments in a readable formats
+    /// </summary>
     class LogUtility
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// logs segments passed in
+        /// </summary>
+        /// <param name="message">hl7 object that contains the segments for logging</param>
         public static void logMessage(HL7 message)
         {
             foreach (HL7Segment seg in message.segments)

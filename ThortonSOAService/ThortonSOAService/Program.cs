@@ -105,6 +105,7 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
             LogUtility.logMessage(response);
 
+            //check if team can register
             if (ret.Contains("SOA"))
             {
                 if (response.segments[0].fields[1] != "OK")
@@ -148,6 +149,7 @@ namespace ThortonSOAService
             logger.Log(LogLevel.Info, "\t>> Response from Registry:\n");
             LogUtility.logMessage(response);
 
+            //check if service was published
             if (ret.Contains("SOA"))
             {
                 if (response.segments[0].fields[1] != "OK")
@@ -183,6 +185,7 @@ namespace ThortonSOAService
             //Start listening for connections
             SocketListener sl = new SocketListener();
             Thread listener = new Thread(new System.Threading.ThreadStart(sl.StartListening));
+            //start countering seans registry bazingas
             Thread bazinga = new Thread(new System.Threading.ThreadStart(sl.StopTheRegistryFromTrolling));
             try
             {

@@ -16,6 +16,9 @@ using HL7Lib.ServiceData;
 
 namespace ThortonSOAService
 {
+    /// <summary>
+    /// calucates the gst, pst hst, and total amount for a given province and principal value
+    /// </summary>
     class PurchaseTotaller
     {
         public const string TAG_NAME = "GIORP-TOTAL";
@@ -55,6 +58,9 @@ namespace ThortonSOAService
         private const int PE_INDEX = 3;
         private const int QC_INDEX = 4;        
 
+        /// <summary>
+        /// constructor
+        /// </summary>
         public PurchaseTotaller() 
         {
             arguments = new List<Message>();
@@ -66,12 +72,21 @@ namespace ThortonSOAService
             results = new List<Message>();
         }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="Province">the province to get tax values for</param>
+        /// <param name="Principal">principal value</param>
         public PurchaseTotaller(string Province, double Principal) : this()
         {
             province = Array.IndexOf(provinceCode, Province);           
             principal = Principal;
         }
 
+        /// <summary>
+        /// calulates the pst for the principal 
+        /// </summary>
+        /// <returns>the pst amount</returns>
         public double GetPST()
         {            
             double pst = 0;
@@ -91,6 +106,10 @@ namespace ThortonSOAService
             return pst;
         }
 
+        /// <summary>
+        /// calculates the hst for the principal
+        /// </summary>
+        /// <returns>the hst amount</returns>
         public double GetHST()
         {            
             double hst = 0;
@@ -103,6 +122,10 @@ namespace ThortonSOAService
             return hst;
         }
 
+        /// <summary>
+        /// calulates the gst for the principal
+        /// </summary>
+        /// <returns>the gst amount</returns>
         public double GetGST()
         {            
             double gst = 0;
@@ -115,6 +138,10 @@ namespace ThortonSOAService
             return gst;
         }
 
+        /// <summary>
+        /// calcuates the total value
+        /// </summary>
+        /// <returns>the total value</returns>
         public double GetTotal()
         {
             double total;
@@ -123,7 +150,10 @@ namespace ThortonSOAService
 
             return total;
         }
-
+        
+        /// <summary>
+        /// sets the arguments the service expects
+        /// </summary>
         private void SetArguments()
         {
             Message arg1 = new Message(1, "province", "string", true);
@@ -133,6 +163,9 @@ namespace ThortonSOAService
             arguments.Add(arg2);
         }
 
+        /// <summary>
+        /// sets the responses the service will send
+        /// </summary>
         private void SetResponses()
         {
             Message res1 = new Message(1, "SubTotalAmount", "double");
@@ -148,6 +181,13 @@ namespace ThortonSOAService
             responses.Add(res5);
         }
 
+        /// <summary>
+        /// add result to result list
+        /// </summary>
+        /// <param name="pos">the position of the value</param>
+        /// <param name="name">name of the value</param>
+        /// <param name="datatype">datatype of the value</param>
+        /// <param name="value">the value</param>
         public void AddResult(int pos, string name, string datatype, double value)
         {
             Message result = new Message(pos, name, datatype, value:value.ToString());
