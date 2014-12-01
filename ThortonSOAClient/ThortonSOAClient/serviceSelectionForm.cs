@@ -17,6 +17,9 @@ using RegistryHandlerLib;
 
 namespace ThortonSOAClient
 {
+    /// <summary>
+    /// service selection UI
+    /// </summary>
     public partial class serviceSelectionForm : Form
     {
         private static string TeamName = ConfigurationManager.AppSettings["teamName"];
@@ -36,6 +39,11 @@ namespace ThortonSOAClient
             InitializeComponent();
         }
 
+        /// <summary>
+        /// on page load go intial logging message.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pageOne_Load(object sender, EventArgs e)
         {
             foreach (string name in serviceNames)
@@ -48,6 +56,11 @@ namespace ThortonSOAClient
             logger.Log(LogLevel.Info, "======================================================="); 
         }
 
+        /// <summary>
+        /// execute service query to get information about a service
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void executeBtn_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(serviceSelectCB.Text))
@@ -59,19 +72,11 @@ namespace ThortonSOAClient
                 service = new Service();
                 service.TeamName = TeamName;
                 HL7 returnMsg;
-                try
+                try // try to register our team.
                 {
                     LogSendSOARegistryCallStart(handler.RegisterTeamMessage(service));
                     returnMsg = RegistryCommunicator.RegisterTeam(service, registryPort, registryIP);
-                    LogSendSOARegistryCallEnd(returnMsg);
-                    string ErrorMessage = returnMsg.Validate();
-                    if (ErrorMessage != "valid")
-                    {
-                        MessageBox.Show("DATA NOT VALID!! Error: " + ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        logger.Log(LogLevel.Fatal, ErrorMessage);
-                        return;
-                    }
-                    
+                    LogSendSOARegistryCallEnd(returnMsg);                    
                 }
                 catch(Exception ex)
                 {
@@ -80,20 +85,21 @@ namespace ThortonSOAClient
                     return;
                 }
                 string ErrorMessage2 = returnMsg.Validate();
-                if (ErrorMessage2 != "valid")
+                if (ErrorMessage2 != "valid") // make sure the return was valid from the registry
                 {
                     MessageBox.Show("DATA NOT VALID!! Error: " + ErrorMessage2, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     logger.Log(LogLevel.Fatal, ErrorMessage2);
                     return;
                 }
                 List<string> fields = returnMsg.segments.FirstOrDefault().fields;
-                if (fields[1] == "OK")
+                if (fields[1] == "OK") // if the message is OK, continue
                 {                    
                     service.TeamID = fields[2];
                     service.Tag = methods[serviceSelectCB.SelectedIndex];
 
                     LogSendSOARegistryCallStart(handler.QueryServiceMessage(service));
 
+                    // query the service information
                     returnMsg = RegistryCommunicator.QueryServiceInfo(service, registryPort, registryIP);
 
                     LogSendSOARegistryCallEnd(returnMsg);
@@ -119,6 +125,10 @@ namespace ThortonSOAClient
             }            
         }
 
+        /// <summary>
+        /// log return part of register team call
+        /// </summary>
+        /// <param name="returnMsg">the message returned from the registry</param>
         private static void LogSendSOARegistryCallEnd(HL7 returnMsg)
         {
             logger.Log(LogLevel.Info, "\t >> Response from SOA-Registry :");
@@ -130,6 +140,10 @@ namespace ThortonSOAClient
             logger.Log(LogLevel.Info, "---");
         }
 
+        /// <summary>
+        /// log message being sent to the registry to register our team
+        /// </summary>
+        /// <param name="messageToSend">the message to send</param>
         private static void LogSendSOARegistryCallStart(HL7 messageToSend)
         {
             logger.Log(LogLevel.Info, "---");
