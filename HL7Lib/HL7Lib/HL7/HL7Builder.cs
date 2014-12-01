@@ -1,10 +1,10 @@
 //***********************
 //Authors: Kyle Fowler, Matt Anselmo, Adrian Krebs
 //Project: ThortonSoa
-//File: SocketListener.cs
+//File: HL7Builder.cs
 //Date: 23/11/14
-//Purpose: This file contains the asyncronous service logic which is able to handle multiple clients at the same time.
-// based on a microsoft socket example
+//Purpose: This file contains the Logic for building all the different HL7 messages
+//			along with the supporting methods to create all the different HL7 segments
 //***********************
 
 using HL7Lib.ServiceData;
@@ -14,7 +14,9 @@ using System.Net;
 
 namespace HL7Lib.HL7
 {
-	//This is the HL7Builder which creates the different messages to send.
+	/// <summary>
+    /// This is the HL7Builder which creates the different messages to send.
+    /// </summary>
     public class HL7Builder
 	{
 		
