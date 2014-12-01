@@ -20,9 +20,9 @@ namespace HL7Lib.HL7
     static class Definitions
     {
         //Define ascii chars needed for HL7 protocol
-        const char BEGIN_MESSAGE = (char) 11;
-        const char END_SEGMENT = (char)13;
-        const char END_MESSAGE = (char)28;
+        public const char BEGIN_MESSAGE = (char) 11;
+        public const char END_SEGMENT = (char)13;
+        public const char END_MESSAGE = (char)28;
 
         //Define the length of HL7 segment types
         public const int SOA_NUM_FIELDS = 5;

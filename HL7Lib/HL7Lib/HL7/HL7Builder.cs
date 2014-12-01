@@ -98,7 +98,7 @@ namespace HL7Lib.HL7
 
 			//create SRV
 			
-			BuildSRVSegment(builtHL7, myService.Tag, myservice.ServiceName, myService.SecurityLevel.ToString(), argsNum.ToString(), respNum.ToString(), myService.Description);
+			BuildSRVSegment(builtHL7, myService.Tag, myService.ServiceName, myService.SecurityLevel.ToString(), argsNum.ToString(), respNum.ToString(), myService.Description);
 
 			//create ARG's
 			foreach (Message arg in myService.Arguments)
