@@ -1,4 +1,12 @@
-﻿using System;
+﻿//***********************
+//Authors: Kyle Fowler, Matt Anselmo, Adrian Krebs
+//Project: ThortonSoa
+//File: SocketSender.cs
+//Date: 30/11/14
+//Purpose: this file contains the class to handle syncronous socket communication mainly used for service/client to registry communications
+//***********************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
