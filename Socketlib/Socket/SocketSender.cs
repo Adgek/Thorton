@@ -9,11 +9,21 @@ using System.Configuration;
 
 namespace SocketClass
 {
+    /// <summary>
+    /// Socket class to open s syncronous socket connection and return the response
+    /// </summary>
     static public class SocketSender
     {
         private static int PORT = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
         private static string IP_ADDRESS = ConfigurationManager.AppSettings["ipaddress"];
 
+        /// <summary>
+        /// send a message through a socket and return the response
+        /// </summary>
+        /// <param name="message">data to send</param>
+        /// <param name="ip">ip to open the socket</param>
+        /// <param name="port">port to open the socket</param>
+        /// <returns>string response</returns>
         public static string StartClient(string message, string ip, int port)
         {
             IP_ADDRESS = ip;
