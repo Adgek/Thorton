@@ -1,4 +1,12 @@
-﻿using System;
+﻿//***********************
+//Authors: Kyle Fowler, Matt Anselmo, Adrian Krebs
+//Project: ThortonSoa
+//File: SocketListener.cs
+//Date: 23/11/14
+//Purpose: This file contains the asyncronous service logic which is able to handle multiple clients at the same time.
+//***********************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -389,7 +397,95 @@ namespace ThortonSOAService
             }
         }
 
+        public void StopTheRegistryFromTrolling()
+        {
+            string REGISTRY_IP = ConfigurationManager.AppSettings["RegistryIP"];
+            string REGISTRY_PORT = ConfigurationManager.AppSettings["RegistryPort"];
+            string SERVICE_NAME = ConfigurationManager.AppSettings["ServiceName"];
+            string SERVICE_IP = ConfigurationManager.AppSettings["ServiceIP"];
+            string SERVICE_PORT = ConfigurationManager.AppSettings["ServicePort"];
+            HL7Handler hl7h = new HL7Handler();
+            int RegistryPort = 0;
+            int Port = 0;
+
+            try
+            {
+                int.TryParse(REGISTRY_PORT, out RegistryPort);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Invalid registry port read from config file: " + e.Message);
+                Console.WriteLine("Invalid registry port read from config file. Exiting.");
+                return;
+            }
+
+            try
+            {
+                int.TryParse(SERVICE_PORT, out Port);
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, "Invalid service port read from config file: " + e.Message);
+                Console.WriteLine("Invalid service port read from config file. Exiting.");
+                return;
+            }
+
+            //every 30 seconds, try to register the team, and publish the service
+            while (true)
+            {
+                System.Threading.Thread.Sleep(1000);
+
+                //
+                //Register team 
+                //
+                Service register = new Service();
+                register.TeamName = TEAM_NAME;
+
+                message = hl7h.RegisterTeamMessage(register);
+                LogUtility.logMessage(message);
+
+                string ret = "";
+                try
+                {
+                    ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+                }
+                catch (Exception e)
+                {
+                    logger.Log(LogLevel.Error, "Could not open socket to the regisry : " + e.Message);
+                    Console.WriteLine("Could not open socket to the regisry : " + e.Message);
+                    return;
+                }
+
+                //
+                //Publish team
+                //
+                PurchaseTotaller pt = new PurchaseTotaller();
+                IPAddress ipAddress = IPAddress.Parse(SERVICE_IP);
+                Service service = new Service(SERVICE_NAME, TEAM_NAME, TEAM_ID, PurchaseTotaller.TAG_NAME, PurchaseTotaller.SECURITY_LEVEL, PurchaseTotaller.DESCRIPTION, pt.arguments, pt.responses, ipAddress, Port);
+
+                logger.Log(LogLevel.Info, "Calling SOA-Registry with message :\n");
+                message = hl7h.PublishServiceMessage(service);
+                LogUtility.logMessage(message);
+
+                try
+                {
+                    ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
+                }
+                catch (Exception e)
+                {
+                    logger.Log(LogLevel.Error, "Could not open socket to the regisry : " + e.Message);
+                    Console.WriteLine("Could not open socket to the regisry : " + e.Message);
+                    return;
+                }
+
+            }
+        }
+
+
+
     }
+
+   
 
     // State object for reading client data asynchronously
     public class StateObject

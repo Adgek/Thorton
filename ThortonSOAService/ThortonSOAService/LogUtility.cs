@@ -1,4 +1,12 @@
-﻿using System;
+﻿//***********************
+//Authors: Kyle Fowler, Matt Anselmo, Adrian Krebs
+//Project: ThortonSoa
+//File: LogUtility.cs
+//Date: 23/11/14
+//Purpose: This file provides a static method which iterates through message segments to log them in a nice format
+//***********************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

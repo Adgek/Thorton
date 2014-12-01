@@ -1,4 +1,12 @@
-﻿using NLog;
+﻿//***********************
+//Authors: Kyle Fowler, Matt Anselmo, Adrian Krebs
+//Project: ThortonSoa
+//File: Program.cs
+//Date: 23/11/14
+//Purpose: This file where everything starts and runs through the required steps to open a connection and start listening for clients
+//***********************
+
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +26,10 @@ namespace ThortonSOAService
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// registers the team, publishes the service and starts listening for clients
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             string SERVICE_NAME = ConfigurationManager.AppSettings["ServiceName"];
@@ -77,7 +89,7 @@ namespace ThortonSOAService
             message = handler.RegisterTeamMessage(register);
             LogUtility.logMessage(message);
 
-            try
+            try 
             {
                 ret = SocketSender.StartClient(message.fullHL7Message, REGISTRY_IP, RegistryPort);
             }

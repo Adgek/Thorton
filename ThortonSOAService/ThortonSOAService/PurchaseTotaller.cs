@@ -1,4 +1,12 @@
-﻿using System;
+﻿//***********************
+//Authors: Kyle Fowler, Matt Anselmo, Adrian Krebs
+//Project: ThortonSoa
+//File: PurchaseTotaller.cs
+//Date: 23/11/14
+//Purpose: This file cotains the logic for the service, taking in a province and principal value and calculating the pst, hst, gst and total price.
+//***********************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
